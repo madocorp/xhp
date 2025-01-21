@@ -5,7 +5,7 @@ namespace X11;
 class CreatePixmapRequest extends Request {
 
   public function __construct($depth, $pid, $drawable, $width, $height) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 53, Type::BYTE],
       ['depth', $depth, Type::CARD8],
       ['requestLength', 4, Type::CARD16],
@@ -14,10 +14,6 @@ class CreatePixmapRequest extends Request {
       ['width', $width, Type::CARD16],
       ['height', $height, Type::CARD16]
     ]);
-  }
-
-  protected function processResponse() {
-    return false;
   }
 
 }

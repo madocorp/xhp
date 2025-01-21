@@ -5,7 +5,7 @@ namespace X11;
 class GetImageRequest extends Request {
 
   public function __construct($format, $drawable, $x, $y, $width, $height, $planeMask) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 73, Type::BYTE],
       ['format', $format, Type::ENUM8, ['XYPixmap', 'ZPixmap']],
       ['requestLength', 2, Type::CARD16],
@@ -21,12 +21,12 @@ class GetImageRequest extends Request {
 
 
   public function PolyText8($drawable, $gc, $texts) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 74, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 4, Type::CARD16],
       ['drawable', $drawable, Type::DRAWABLE],
-      ['gc', $gc, Type::GCCONTEXT],
+      ['gc', $gc, Type::GCONTEXT],
       ['x', $x, Type::INT16],
       ['y', $y, Type::INT16]
 //???
@@ -78,12 +78,12 @@ class GetImageRequest extends Request {
 
 
   public function ImageText8($drawable, $gc, $x, $y, $string) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 76, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 4, Type::CARD16],
       ['drawable', $drawable, Type::DRAWABLE],
-      ['gc', $gc, Type::GCCONTEXT],
+      ['gc', $gc, Type::GCONTEXT],
       ['x', $x, Type::INT16],
       ['y', $y, Type::INT16],
       ['string', $string, Type::STRING8],
@@ -92,12 +92,12 @@ class GetImageRequest extends Request {
   }
 
   public function ImageText16($drawable, $gc, $x, $y, $string) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 77, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 4, Type::CARD16],
       ['drawable', $drawable, Type::DRAWABLE],
-      ['gc', $gc, Type::GCCONTEXT],
+      ['gc', $gc, Type::GCONTEXT],
       ['x', $x, Type::INT16],
       ['y', $y, Type::INT16],
       ['string', $string, Type::STRING8],
@@ -110,3 +110,17 @@ class GetImageRequest extends Request {
   }
 
 }
+
+/*
+  public static function GetImage() {
+▶
+     1     1                               Reply
+     1     CARD8                           depth
+     2     CARD16                          sequence number
+     4     (n+p)/4                         reply length
+     4     VISUALID                        visual
+          0     None
+     20                                    unused
+     n     LISTofBYTE                      data
+     p                                     unused, p=pad(n)
+*/

@@ -10,7 +10,7 @@ class FillPolyRequest extends Request {
       ['unused', 0, Type::BYTE],
       ['requestLength', 4 + count($points), Type::CARD16],
       ['drawable', $drawable, Type::DRAWABLE],
-      ['gc', $gc, Type::GCCONTEXT],
+      ['gc', $gc, Type::GCONTEXT],
       ['shape', $shape, Type::ENUM, ['Complex', 'Nonconvex', 'Convex']],
       ['coordinateMode', $coordinateMode, Type::ENUM, ['Origin', 'Previous']],
       ['unused', 0, Type::CARD16]
@@ -19,7 +19,7 @@ class FillPolyRequest extends Request {
       $data[] = ['x', $point['x'], Type::INT16];
       $data[] = ['y', $point['y'], Type::INT16];
     }
-    $this->doRequest($data);
+    $this->sendRequest($data);
   }
 
   protected function processResponse() {

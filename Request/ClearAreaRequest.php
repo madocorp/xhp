@@ -5,7 +5,7 @@ namespace X11;
 class ClearAreaRequest extends Request {
 
   public function __construct($exposures, $window, $x, $y, $width, $height) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 61, Type::BYTE],
       ['exposures', $exposures, Type::BOOL],
       ['requestLength', 4, Type::CARD16],
@@ -15,10 +15,6 @@ class ClearAreaRequest extends Request {
       ['width', $width, Type::CARD16],
       ['height', $height, Type::CARD16]
     ]);
-  }
-
-  protected function processResponse() {
-    return false;
   }
 
 }

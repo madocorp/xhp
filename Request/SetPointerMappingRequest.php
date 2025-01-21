@@ -16,7 +16,7 @@ class SetPointerMappingRequest extends Request {
       $data[] = ['button', $button, Type::CARD8];
     }
     $data[] = ['pad', $pad, Type::PAD4];
-    $this->doRequest($data);
+    $this->sendRequest($data);
     Connection::setResponse($this->processResponse());
   }
 
@@ -25,3 +25,15 @@ class SetPointerMappingRequest extends Request {
   }
 
 }
+
+/*
+  public static function SetPointerMapping() {
+▶
+     1     1                               Reply
+     1                                     status
+          0     Success
+          1     Busy
+     2     CARD16                          sequence number
+     4     0                               reply length
+     24                                    unused
+*/

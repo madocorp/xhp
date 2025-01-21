@@ -9,7 +9,7 @@ class SetClipRectanglesRequest extends Request {
       ['opcode', 59, Type::BYTE],
       ['ordering', $ordering, Type::ENUM8, ['UnSorted', 'YSorted', 'YXSorted', 'YXBanded']],
       ['requestLength', 3 + 2 * count($rectangles), Type::CARD16],
-      ['gc', $gc, Type::GCCONTEXT],
+      ['gc', $gc, Type::GCONTEXT],
       ['clipXOrigin', $clipXOrigin, Type::INT16],
       ['clipYOrigin', $clipYOrigin, Type::INT16],
       ['dashes', $dashes, Type::STRING8]
@@ -20,7 +20,7 @@ class SetClipRectanglesRequest extends Request {
       $data[] = ['width', $rectangle['width'], Type::CARD16];
       $data[] = ['height', $rectangle['height'], Type::CARD16];
     }
-    $this->doRequest($data);
+    $this->sendRequest($data);
   }
 
   protected function processResponse() {

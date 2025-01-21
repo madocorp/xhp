@@ -5,26 +5,21 @@ namespace X11;
 class PolyArcRequest extends Request {
 
   public function __construct($drawable, $gc, $arcs) {
-    $data = [
+    $this->sendRequest([
       ['opcode', 68, Type::BYTE],
       ['unused', 0, Type::BYTE],
-      ['requestLength', 3 + 3 * count($arcs), Type::CARD16],
+      ['requestLength', 3, Type::CARD16],
       ['drawable', $drawable, Type::DRAWABLE],
-      ['gc', $gc, Type::GCCONTEXT],
-    ];
-    foreach ($arcs as $arc) {
-      $data[] = ['x', $arc['x'], Type::INT16];
-      $data[] = ['y', $arc['y'], Type::INT16];
-      $data[] = ['width', $arc['width'], Type::CARD16];
-      $data[] = ['height', $arc['height'], Type::CARD16];
-      $data[] = ['angle1', $arc['angle1'], Type::INT16];
-      $data[] = ['angle2', $arc['angle2'], Type::INT16];
-    }
-    $this->doRequest($data);
-  }
-
-  protected function processResponse() {
-    return false;
+      ['gc', $gc, Type::GCONTEXT],
+      ['arcs', $arcs, Type::FLIST, [
+        ['x', Type::INT16],
+        ['y', Type::INT16],
+        ['width', Type::CARD16],
+        ['height', Type::CARD16],
+        ['angle1', Type::INT16],
+        ['angle2', Type::INT16]
+      ]]
+    ]);
   }
 
 }

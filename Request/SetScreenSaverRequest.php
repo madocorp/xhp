@@ -5,7 +5,7 @@ namespace X11;
 class SetScreenSaverRequest extends Request {
 
   public function __construct($timeout, $interval, $preferBlanking, $allowExposures) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 107, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 3, Type::CARD16],

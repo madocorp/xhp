@@ -14,11 +14,10 @@ class ChangePropertyRequest extends Request {
       $format = 8;
       $lengthInFormatUnit = $length;
     }
-    $pad = Connection::pad4($length);
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 18, Type::BYTE],
       ['mode', $mode, Type::ENUM8, ['Replace', 'Prepend', 'Append']],
-      ['requestLength', 6 + (($length + $pad) >> 2), Type::CARD16],
+      ['requestLength', 6, Type::CARD16],
       ['window', $window, Type::WINDOW],
       ['property', $property, Type::ATOM],
       ['type', $type, Type::ATOM],
@@ -27,13 +26,8 @@ class ChangePropertyRequest extends Request {
       ['unused', 0, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['dataLength', $lengthInFormatUnit, Type::CARD32],
-      ['data', $data, Type::STRING8],
-      ['pad', $pad, Type::PAD4]
+      ['data', $data, Type::STRING8]
     ]);
-  }
-
-  protected function processResponse() {
-    return false;
   }
 
 }

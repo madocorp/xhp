@@ -27,15 +27,17 @@ class Error {
   protected static $errorHandler = false;
 
   protected static function debug($bytes, $name) {
+    echo "\033[31m"; // red
     $error = self::bytesToError($bytes);
     echo "\nERROR: {$name}\n";
     foreach ($error as $name => $value) {
-      if ($field == 'data' && !in_array($name, self::$hasData)) {
+      if ($name == 'data' && !in_array($name, self::$hasData)) {
         continue;
       }
       echo '  ', $name, ': ', $value, "\n";
     }
     echo "\n";
+    echo "\033[0m"; // reset
   }
 
   protected static function bytesToError($bytes) {
@@ -60,7 +62,7 @@ class Error {
     }
     $code = $type[2];
     $name = self::$codes[$code];
-    if (DEBUG) {
+    if (X11_DEBUG) {
       self::debug($bytes, $name);
     }
     if (self::$errorHandler !== false) {

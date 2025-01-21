@@ -5,7 +5,7 @@ namespace X11;
 class UngrabButtonRequest extends Request {
 
   public function __construct($button, $window, $modifiers) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 29, Type::BYTE],
       ['button', $button, Type::BYTE],
       ['requestLength', 3, Type::CARD16],

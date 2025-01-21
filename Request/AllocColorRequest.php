@@ -5,7 +5,7 @@ namespace X11;
 class AllocColorRequest extends Request {
 
   public function __construct($colormap, $red, $green, $blue) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 84, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 4, Type::CARD16],
@@ -23,3 +23,18 @@ class AllocColorRequest extends Request {
   }
 
 }
+
+/*
+  public static function AllocColor() {
+▶
+     1     1                               Reply
+     1                                     unused
+     2     CARD16                          sequence number
+     4     0                               reply length
+     2     CARD16                          red
+     2     CARD16                          green
+     2     CARD16                          blue
+     2                                     unused
+     4     CARD32                          pixel
+     12                                    unused
+*/

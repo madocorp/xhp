@@ -5,7 +5,7 @@ namespace X11;
 class GrabKeyRequest extends Request {
 
   public function __construct($ownerEvents, $grabWindow, $modifiers, $key, $pointerMode, $keyboardMode) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 33, Type::BYTE],
       ['ownerEvents', $ownerEvents, Type::BOOL],
       ['requestLength', 4, Type::CARD16],

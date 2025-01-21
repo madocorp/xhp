@@ -5,23 +5,17 @@ namespace X11;
 class PolyPointRequest extends Request {
 
   public function __construct($coordinateMode, $drawable, $gc, $points) {
-    $data = [
+    $this->sendRequest([
       ['opcode', 64, Type::BYTE],
       ['coordinateMode', $coordinateMode, Type::ENUM8, ['Origin', 'Previous']],
-      ['requestLength', 3 + count($points), Type::CARD16],
+      ['requestLength', 3, Type::CARD16],
       ['drawable', $drawable, Type::DRAWABLE],
-      ['gc', $gc, Type::GCCONTEXT],
-    ];
-    foreach ($points as $point) {
-      $data[] = ['x', $point['x'], Type::INT16];
-      $data[] = ['y', $point['y'], Type::INT16];
-    }
-    $this->doRequest($data);
-  }
-
-
-  protected function processResponse() {
-    return false;
+      ['gc', $gc, Type::GCONTEXT],
+      ['points', $points, Type::FLIST, [
+        ['x', Type::INT16],
+        ['y', Type::INT16]
+      ]]
+    ]);
   }
 
 }

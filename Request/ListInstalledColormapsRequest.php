@@ -5,7 +5,7 @@ namespace X11;
 class ListInstalledColormapsRequest extends Request {
 
   public function __construct($window) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 83, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 2, Type::CARD16],
@@ -19,3 +19,15 @@ class ListInstalledColormapsRequest extends Request {
   }
 
 }
+
+/*
+  public static function ListInstalledColormaps() {
+▶
+     1     1                               Reply
+     1                                     unused
+     2     CARD16                          sequence number
+     4     n                               reply length
+     2     n                               number of COLORMAPs in cmaps
+     22                                    unused
+     4n     LISTofCOLORMAP                 cmaps
+*/

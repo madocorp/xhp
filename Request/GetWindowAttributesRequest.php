@@ -5,7 +5,7 @@ namespace X11;
 class GetWindowAttributesRequest extends Request {
 
   public function __construct($window) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 3, Type::BYTE],
       ['unuset', 0, Type::BYTE],
       ['requestLength', 2, Type::CARD16],

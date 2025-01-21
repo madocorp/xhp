@@ -5,7 +5,7 @@ namespace X11;
 class DeletePropertyRequest extends Request {
 
   public function __construct($window, $property) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 19, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 3, Type::CARD16],

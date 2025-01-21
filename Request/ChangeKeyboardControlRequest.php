@@ -20,7 +20,8 @@ class ChangeKeyboardControlRequest extends Request {
       ['autoRepeatMod', Type::ENUM8, ['Off', 'On', 'Default']],
     ];
     $data = $this->addBitmaskList($data, $valueMap, $values);
-    $this->doRequest($data);
+    $this->sendRequest($data);
+    Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {

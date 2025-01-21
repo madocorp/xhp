@@ -367,11 +367,13 @@ class Event {
   protected static $end = false;
 
   protected static function debug($event, $name) {
+    echo "\033[36m"; // cyan
     echo "\n", str_pad("[ {$name} ]", 120, '-', STR_PAD_BOTH), "\n";
     foreach ($event as $name => $value) {
       echo '*  ', $name, ': ', $value, "\n";
     }
     echo "\n";
+    echo "\033[0m"; // reset
   }
 
   public static function bytesToArray($bytes) {

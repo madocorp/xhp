@@ -5,7 +5,7 @@ namespace X11;
 class UngrabPointerRequest extends Request {
 
   public function __construct($timestamp) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 27, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 2, Type::CARD16],

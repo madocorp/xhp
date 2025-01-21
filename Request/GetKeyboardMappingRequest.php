@@ -5,7 +5,7 @@ namespace X11;
 class GetKeyboardMappingRequest extends Request {
 
   public function __construct($firstKeycode, $count) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 101, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 2, Type::CARD16],
@@ -21,3 +21,15 @@ class GetKeyboardMappingRequest extends Request {
   }
 
 }
+
+/*
+  public static function GetKeyboardMapping() {
+▶
+     1     1                               Reply
+     1     n                               keysyms-per-keycode
+     2     CARD16                          sequence number
+     4     nm                              reply length (m = count field
+                                           from the request)
+     24                                    unused
+     4nm     LISTofKEYSYM                  keysyms
+*/

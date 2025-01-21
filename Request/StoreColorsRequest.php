@@ -19,7 +19,7 @@ class StoreColorsRequest extends Request {
       $data[] = ['doColors', $doColors, Type::BYTE];
       $data[] = ['unused', 0, Type::BYTE];
     }
-    $this->doRequest($data);
+    $this->sendRequest($data);
   }
 
   protected function processResponse() {

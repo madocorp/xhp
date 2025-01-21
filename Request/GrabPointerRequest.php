@@ -8,7 +8,7 @@ class GrabPointerRequest extends Request {
     $grabWindow, $eventMask, $pointerMode, $keyboardMode,
     $confineTo, $cursor, $timestamp
   ) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 26, Type::BYTE],
       ['ownerEvents', 0, Type::BOOL],
       ['requestLength', 6, Type::CARD16],
@@ -29,3 +29,18 @@ class GrabPointerRequest extends Request {
   }
 
 }
+
+/*
+  public static function GrabPointer() {
+▶
+     1     1                               Reply
+     1                                     status
+          0     Success
+          1     AlreadyGrabbed
+          2     InvalidTime
+          3     NotViewable
+          4     Frozen
+     2     CARD16                          sequence number
+     4     0                               reply length
+     24                                    unused
+*/

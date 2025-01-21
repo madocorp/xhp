@@ -5,7 +5,7 @@ namespace X11;
 class ChangePointerControlRequest extends Request {
 
   public function __construct($accelearatorNumerator, $acceleratorDenominator, $thresold, $doAcceleration, $doThresold) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 105, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 3, Type::CARD16],

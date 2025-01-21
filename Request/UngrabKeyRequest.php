@@ -5,7 +5,7 @@ namespace X11;
 class UngrabKeyRequest extends Request {
 
   public function __construct($key, $timestamp, $grabWindow, $modifiers) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 34, Type::BYTE],
       ['key', $key, Type::BYTE],
       ['requestLength', 3, Type::CARD16],

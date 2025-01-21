@@ -6,7 +6,7 @@ class OpenFontRequest extends Request {
 
   public function __construct($fid, $name) {
     $length = strlen($name);
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 45, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 3, Type::CARD16],

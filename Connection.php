@@ -101,6 +101,25 @@ class Connection {
     return self::$lastResponse;
   }
 
+  public static function byteDebug($bytes) {
+    echo "\033[33m"; // yellow
+    $bytes = unpack('C*', $bytes);
+    $n = count($bytes);
+    echo '| ';
+    foreach ($bytes as $i => $byte) {
+      $hex = dechex($byte);
+      echo '0x', ($byte < 0x10 ? '0' : ''), $hex, ' ';
+      if ($i % 4 == 0) {
+        echo '| ';
+      }
+      if ($i % 16 == 0 && $i < $n) {
+        echo "\n| ";
+      }
+    }
+    echo "\n";
+    echo "\033[0m"; // reset
+  }
+
 }
 
 

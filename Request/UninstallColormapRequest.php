@@ -5,7 +5,7 @@ namespace X11;
 class UninstallColormapRequest extends Request {
 
   public function __construct($colormap) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 82, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 2, Type::CARD16],

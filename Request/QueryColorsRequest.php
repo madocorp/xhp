@@ -14,7 +14,7 @@ class QueryColorsRequest extends Request {
     foreach ($pixels as $pixel) {
       $data[] = ['pixel', $pixel, Type::CARD32];
     }
-    $this->doRequest($data);
+    $this->sendRequest($data);
     Connection::setResponse($this->processResponse());
   }
 
@@ -23,3 +23,37 @@ class QueryColorsRequest extends Request {
   }
 
 }
+
+/*
+  public static function QueryColors() {
+▶
+     1     1                               Reply
+     1                                     unused
+     2     CARD16                          sequence number
+     4     2n                              reply length
+     2     n                               number of RGBs in colors
+     22                                    unused
+     8n     LISTofRGB                      colors
+
+  RGB
+     2     CARD16                          red
+     2     CARD16                          green
+     2     CARD16                          blue
+     2                                     unused
+*/
+  }
+
+  public sttic function LookupColor() {
+▶
+     1     1                               Reply
+     1                                     unused
+     2     CARD16                          sequence number
+     4     0                               reply length
+     2     CARD16                          exact-red
+     2     CARD16                          exact-green
+     2     CARD16                          exact-blue
+     2     CARD16                          visual-red
+     2     CARD16                          visual-green
+     2     CARD16                          visual-blue
+     12                                    unused
+*/

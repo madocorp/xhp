@@ -7,7 +7,7 @@ class StoreNamedColorRequest extends Request {
   public function __construct($doColors, $colormap, $pixel, $name) {
     $length = strlen($name);
     $pad = Connection::pad4($length);
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 90, Type::BYTE],
       ['doColors', $doColors, Type::BYTE],
       ['requestLength', 4 + (($length + $pad) >> 2), Type::CARD16],

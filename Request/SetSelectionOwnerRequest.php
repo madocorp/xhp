@@ -5,7 +5,7 @@ namespace X11;
 class SetSelectionOwnerRequest extends Request {
 
   public function __construct($window, $selection, $timestamp) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 22, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 4, Type::CARD16],

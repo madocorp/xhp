@@ -6,7 +6,7 @@ class ListFontsRequest extends Request {
 
   public function __construct($maxNames, $pattern) {
     $length = strlen($pattern);
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 49, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 2, Type::CARD16],
@@ -23,3 +23,16 @@ class ListFontsRequest extends Request {
   }
 
 }
+
+/*
+  public static function ListFonts() {
+▶
+     1     1                               Reply
+     1                                     unused
+     2     CARD16                          sequence number
+     4     (n+p)/4                         reply length
+     2     CARD16                          number of STRs in names
+     22                                    unused
+     n     LISTofSTR                       names
+     p                                     unused, p=pad(n)
+*/

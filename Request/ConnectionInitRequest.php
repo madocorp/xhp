@@ -6,21 +6,17 @@ class ConnectionInitRequest extends Request {
 
   public function __construct($byteOrder, $authorizationProtocolName = '', $authorizationProtocolData = '') {
     $apnlen = strlen($authorizationProtocolName);
-    $apnpad = Connection::pad4($apnlen);
     $apdlen = strlen($authorizationProtocolData);
-    $apdpad = Connection::pad4($apdlen);
-    $this->doRequest([
+    $this->sendRequest([
       ['byteOrder', $byteOrder, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['protocolMajorVersion', 11, Type::CARD16],
       ['protocolMinorVersion', 0, Type::CARD16],
-      ['lengthOfAuthorizationProtocolName', ($apnlen + $apnpad) >> 2, Type::CARD16],
-      ['lengthOfAuthorizationProtocolData', ($apdlen + $apdpad) >> 2, Type::CARD16],
+      ['lengthOfAuthorizationProtocolName', $apnlen >> 2, Type::CARD16],
+      ['lengthOfAuthorizationProtocolData', $apdlen >> 2, Type::CARD16],
       ['unused', 0, Type::CARD16],
       ['AuthorizationProtocolName', $authorizationProtocolName, Type::STRING8],
-      ['pad', $apnpad, Type::PAD4],
-      ['AuthorizationProtocolData', $authorizationProtocolData, Type::STRING8],
-      ['pad', $apdpad, Type::PAD4]
+      ['AuthorizationProtocolData', $authorizationProtocolData, Type::STRING8]
     ]);
     Connection::setResponse($this->processResponse());
   }

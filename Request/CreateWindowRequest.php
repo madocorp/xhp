@@ -9,7 +9,7 @@ class CreateWindowRequest extends Request {
     $y, $width, $height, $borderWidth,
     $class, $visual, $values
   ) {
-    $data = [
+    $this->sendRequest([
       ['opcode', 1, Type::BYTE],
       ['depth', $depth, Type::CARD8],
       ['requestLength', 8, Type::CARD16],
@@ -21,31 +21,25 @@ class CreateWindowRequest extends Request {
       ['height', $height, Type::CARD16],
       ['borderWidth', $borderWidth, Type::CARD16],
       ['class', $class, Type::ENUM16, ['CopyFromParent', 'InputOutput', 'InputOnly']],
-      ['visual', $visual, Type::VISUALID]
-    ];
-    $valueMap = [
-      ['backgroundPixmap', Type::PIXMAP],
-      ['backgroundPixel', Type::CARD32],
-      ['borderPixmap', Type::PIXMAP],
-      ['borderPixel', Type::CARD32],
-      ['bitGravity', Type::BYTE],
-      ['winGravity', Type::BYTE],
-      ['backingStore', Type::ENUM8, ['NotUseful', 'WhenMapped', 'Always']],
-      ['backingPlanes', Type::CARD32],
-      ['backingPixel', Type::CARD32],
-      ['overrideRedirect', Type::BYTE],
-      ['saveUnder', Type::BYTE],
-      ['eventMask', Type::CARD32],
-      ['doNotPropagateMask', Type::CARD32],
-      ['colormap', Type::CARD32],
-      ['cursor', Type::CARD32]
-    ];
-    $data = $this->addBitmaskList($data, $valueMap, $values);
-    $this->doRequest($data);
-  }
-
-  protected function processResponse() {
-    return false;
+      ['visual', $visual, Type::VISUALID],
+      ['values', $values, Type::VLIST, [
+        ['backgroundPixmap', Type::PIXMAP],
+        ['backgroundPixel', Type::CARD32],
+        ['borderPixmap', Type::PIXMAP],
+        ['borderPixel', Type::CARD32],
+        ['bitGravity', Type::BYTE],
+        ['winGravity', Type::BYTE],
+        ['backingStore', Type::ENUM8, ['NotUseful', 'WhenMapped', 'Always']],
+        ['backingPlanes', Type::CARD32],
+        ['backingPixel', Type::CARD32],
+        ['overrideRedirect', Type::BYTE],
+        ['saveUnder', Type::BYTE],
+        ['eventMask', Type::CARD32],
+        ['doNotPropagateMask', Type::CARD32],
+        ['colormap', Type::CARD32],
+        ['cursor', Type::CARD32]
+      ]]
+    ]);
   }
 
 }

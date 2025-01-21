@@ -5,7 +5,7 @@ namespace X11;
 class GrabButtonRequest extends Request {
 
   public function __construct($ownerEvents, $grabWindow, $eventMask, $pointerMode, $keyboardMode, $confineTo, $cursor, $button, $modifiers) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 28, Type::BYTE],
       ['ownerEvents', $ownerEvents, Type::BOOL],
       ['requestLength', 6, Type::CARD16],

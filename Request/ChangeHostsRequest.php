@@ -7,7 +7,7 @@ class ChangeHostsRequest extends Request {
   public function __construct($mode, $family, $address) {
     $length = strlen($address);
     $pad = Connection::pad4($length);
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 109, Type::BYTE],
       ['mode', $mode, Type::ENUM8, ['Insert', 'Delete']],
       ['requestLength', 2 + (($length + $pad) >> 2), Type::CARD16],
@@ -17,6 +17,7 @@ class ChangeHostsRequest extends Request {
       ['address', $address, Type::STRING8],
       ['pad', $pad, Type::PAD4]
     ]);
+    Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {

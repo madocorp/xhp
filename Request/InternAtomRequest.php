@@ -6,7 +6,7 @@ class InternAtomRequest extends Request {
 
   public function __construct($name) {
     $length = strlen($name);
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 16, Type::BYTE],
       ['onlyIfExists', 0, Type::BOOL],
       ['requestLength', 2, Type::CARD16],
@@ -23,3 +23,15 @@ class InternAtomRequest extends Request {
   }
 
 }
+
+/*
+  public static function InternAtom() {
+▶
+     1     1                               Reply
+     1                                     unused
+     2     CARD16                          sequence number
+     4     0                               reply length
+     4     ATOM                            atom
+           0     None
+     20                                    unused
+*/

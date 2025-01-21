@@ -14,38 +14,33 @@ function eventHandler($event) {
 }
 
 function zzz() {
-  usleep(500000);
+  usleep(50000);
 }
 
 \X11\Connection::init();
 $screen = \X11\Connection::$data['screens'][0];
 
 $depth = $screen['rootDepth'];
-$wid = \X11\Connection::generateId();
-$parent = $screen['root'];
-$x = 0;
-$y = 0;
-$width = 640;
-$height = 480;
+$wid1 = \X11\Connection::generateId();
+$root = $screen['root'];
 $borderWidth = 0;
 $class = 'InputOutput';
 $visual = $screen['rootVisual'];
 $values = ['backgroundPixel' => 0x000055, 'eventMask' => 0x8003];
-
 new \X11\CreateWindowRequest(
-  $depth, $wid, $parent, $x,
-  $y, $width, $height, $borderWidth,
+  $depth, $wid1, $root, 0,
+  0, 640, 480, $borderWidth,
   $class, $visual, $values
 );
-new \X11\ChangePropertyRequest('Replace', $wid, Atom::WM_NAME, Atom::STRING, 8, 'Hello World!');
-new \X11\GetWindowAttributesRequest($wid);
-new \X11\MapWindowRequest($wid);
+new \X11\ChangePropertyRequest('Replace', $wid1, Atom::WM_NAME, Atom::STRING, 8, 'Hello World!');
+new \X11\GetWindowAttributesRequest($wid1);
+new \X11\MapWindowRequest($wid1);
 
 zzz();
 $wid2 = Connection::generateId();
 new \X11\CreateWindowRequest(
-  $depth, $wid2, $parent, $x,
-  $y, 200, 200, $borderWidth,
+  $depth, $wid2, $root, 0,
+  0, 200, 200, $borderWidth,
   $class, $visual, ['backgroundPixel' => 0x550000, 'eventMask' => 0x8003]
 );
 new \X11\ChangePropertyRequest('Replace', $wid2, Atom::WM_NAME, Atom::STRING, 8, 'Hello World2!');
@@ -54,42 +49,118 @@ new \X11\MapWindowRequest($wid2);
 zzz();
 $swid1 = Connection::generateId();
 new \X11\CreateWindowRequest(
-  $depth, $swid1, $wid, 10,
+  $depth, $swid1, $wid1, 10,
   10, 100, 100, 0,
   $class, $visual, ['backgroundPixel' => 0xaa0000]
 );
 $swid2 = Connection::generateId();
 new \X11\CreateWindowRequest(
-  $depth, $swid2, $wid, 30,
+  $depth, $swid2, $wid1, 30,
   30, 100, 100, 0,
   $class, $visual, ['backgroundPixel' => 0xaaaa00]
 );
 $swid3 = Connection::generateId();
 new \X11\CreateWindowRequest(
-  $depth, $swid3, $wid, 50,
+  $depth, $swid3, $wid1, 50,
   50, 100, 100, 5,
   $class, $visual, ['backgroundPixel' => 0x00aa00]
 );
-new \X11\MapSubwindowsRequest($wid);
+new \X11\MapSubwindowsRequest($wid1);
+
+zzz();
+new \X11\UnmapSubwindowsRequest($wid1);
+
+zzz();
+new \X11\MapSubwindowsRequest($wid1);
+
+zzz();
+new \X11\ConfigureWindowRequest($wid1, ['x' => 10, 'y' => 10]);
+
+zzz();
+new \X11\UnmapWindowRequest($wid2);
+
+zzz();
+new \X11\MapWindowRequest($wid2);
+
+zzz();
+new \X11\ConfigureWindowRequest($wid2, ['width' => 250, 'x' => 660, 'y' => 10]);
 
 zzz();
 new \X11\ChangeWindowAttributesRequest($swid3, ['borderPixel' => 0xffffff]);
 
 zzz();
-new \X11\CirculateWindowRequest('RaiseLowest', $wid);
+new \X11\CirculateWindowRequest('RaiseLowest', $wid1);
 
 zzz();
-new \X11\ChangeSaveSetRequest('Delete', $parent); // ???
+new \X11\CirculateWindowRequest('RaiseLowest', $wid1);
+
+zzz();
+new \X11\CirculateWindowRequest('RaiseLowest', $wid1);
+
+zzz();
+new \X11\ChangeSaveSetRequest('Delete', $root); // ???
 
 zzz();
 new \X11\ReparentWindowRequest($swid2, $wid2, 50, 50);
 
-Event::loop('\X11\eventHandler');
-
-new \X11\DestroySubwindowsRequest($wid);
+zzz();
+$gcid = Connection::generateId();
+new \X11\CreateGCRequest($gcid, $wid1, ['background' => 0xffffff, 'foreground' => 0x0, 'lineWidth' => 3]);
+new \X11\ChangeGCRequest($gcid, ['foreground' => 0xffff00]);
 
 zzz();
-new \X11\DestroyWindowRequest($wid);
+$points = [];
+for ($i = 0; $i < 100; $i++) {
+  $points[] = ['x' => rand(150, 450), 'y' => rand(150, 450)];
+}
+new \X11\PolyPointRequest('Origin', $wid1, $gcid, $points);
+
+zzz();
+new \X11\PolyLineRequest('Origin', $wid1, $gcid, $points);
+
+zzz();
+new \X11\PolyRectangleRequest($wid1, $gcid, [['x' => 500, 'y' => 400, 'width' => 100, 'height' => 50]]);
+
+zzz();
+new \X11\PolySegmentRequest($wid1, $gcid, [['x1' => 500, 'y1' => 400, 'x2' => 550, 'y2' => 450]]);
+
+zzz();
+new \X11\PolyArcRequest($wid1, $gcid, [['x' => 500, 'y' => 400, 'width' => 100, 'height' => 50, 'angle1' => 0, 'angle2' => 180 * 64]]);
+
+zzz();
+new \X11\PolyFillRectangleRequest($wid1, $gcid, [['x' => 200, 'y' => 400, 'width' => 100, 'height' => 50]]);
+
+zzz();
+new \X11\PolyFillArcRequest($wid1, $gcid, [['x' => 500, 'y' => 100, 'width' => 100, 'height' => 50, 'angle1' => 0, 'angle2' => 180 * 64]]);
+
+zzz();
+new \X11\ClearAreaRequest(false, $wid1, 200, 200, 200, 200);
+
+$pmid1 = Connection::generateId();
+new \X11\CreatePixmapRequest(1, $pmid1, $wid1, 16, 16);
+// new \X11\PutImageRequest('Bitmap', $pmid1, $gcid, 16, 16, 0, 0, 0, 1, pack("C*", ...array_fill(0, 32, 0xff)));
+$crid1 = Connection::generateId();
+new \X11\CreateCursorRequest($crid1, $pmid1, $pmid1, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0, 0);
+new \X11\ChangeWindowAttributesRequest($wid1, ['cursor' => $crid1]);
+
+new \X11\UnmapSubwindowsRequest($wid1);
+
+$pmid2 = Connection::generateId();
+new \X11\CreatePixmapRequest(24, $pmid2, $root, 100, 100);
+new \X11\PutImageRequest('ZPixmap', $pmid2, $gcid, 100, 100, 0, 0, 0, 24, pack("C*", ...array_fill(0, 4*100*100, 0xff)));
+new \X11\PolyArcRequest($pmid2, $gcid, [['x' => 10, 'y' => 10, 'width' => 80, 'height' => 80, 'angle1' => 0, 'angle2' => 360 * 64]]);
+new \X11\CopyAreaRequest($pmid2, $wid1, $gcid, 0, 0, 300, 300, 100, 100);
+
+
+zzz();
+new \X11\BellRequest(50);
+
+Event::loop('\X11\eventHandler');
+
+new \X11\DestroySubwindowsRequest($wid1);
+
+zzz();
+new \X11\DestroyWindowRequest($wid1);
 
 zzz();
 new \X11\DestroyWindowRequest($wid2);

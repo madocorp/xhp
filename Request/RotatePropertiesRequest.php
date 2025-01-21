@@ -17,7 +17,7 @@ class RotatePropertiesRequest extends Request {
     foreach ($properties as $property) {
       $data[] = ['property', $property, Type::ATOM];
     }
-    $this->doRequest($data);
+    $this->sendRequest($data);
   }
 
   protected function processResponse() {

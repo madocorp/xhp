@@ -15,7 +15,7 @@ class FreeColorsRequest extends Request {
     foreach ($pixels as $pixel) {
       $data[] = ['pixel', $pixel, Type::CARD32];
     }
-    $this->doRequest($data);
+    $this->sendRequest($data);
   }
 
   protected function processResponse() {

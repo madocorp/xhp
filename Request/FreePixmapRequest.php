@@ -5,7 +5,7 @@ namespace X11;
 class FreePixmapRequest extends Request {
 
   public function __construct($pixmap) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 54, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 2, Type::CARD16],

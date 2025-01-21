@@ -5,7 +5,7 @@ namespace X11;
 class CopyColormapAndFreeRequest extends Request {
 
   public function __construct($mid, $srcColormap) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 80, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 3, Type::CARD16],

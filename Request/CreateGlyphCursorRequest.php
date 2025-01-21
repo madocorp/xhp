@@ -5,7 +5,7 @@ namespace X11;
 class CreateGlyphCursorRequest extends Request {
 
   public function __construct($cursor, $sourceFont, $maskFont, $sourceChar, $maskChar, $foreRed, $foreGree, $foreBlue, $backRed, $backGreen, $backBlue) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 94, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 8, Type::CARD16],

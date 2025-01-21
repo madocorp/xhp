@@ -5,7 +5,7 @@ namespace X11;
 class WarpPointerRequest extends Request {
 
   public function __construct($srcWindow, $dstWindow, $srcX, $srcY, $srcWidth, $srcHeight, $dstX, $dstY) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 41, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 6, Type::CARD16],

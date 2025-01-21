@@ -5,7 +5,7 @@ namespace X11;
 class ChangeActivePointerGrabRequest extends Request {
 
   public function __construct($cursor, $timestamp, $eventMask) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 30, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 4, Type::CARD16],
@@ -14,6 +14,7 @@ class ChangeActivePointerGrabRequest extends Request {
       ['eventMask', $eventMask, Type::CARD16],
       ['unused', 0, Type::CARD16]
     ]);
+    Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {

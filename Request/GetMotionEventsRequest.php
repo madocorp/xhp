@@ -5,7 +5,7 @@ namespace X11;
 class GetMotionEventsRequest extends Request {
 
   public function __construct($window, $start, $stop) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 39, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 4, Type::CARD16],
@@ -21,3 +21,20 @@ class GetMotionEventsRequest extends Request {
   }
 
 }
+
+/*
+  public static function GetMotionEvents() {
+▶
+     1     1                               Reply
+     1                                     unused
+     2     CARD16                          sequence number
+     4     2n                              reply length
+     4     n                               number of TIMECOORDs in events
+     20                                    unused
+     8n     LISTofTIMECOORD                events
+
+  TIMECOORD
+     4     TIMESTAMP                       time
+     2     INT16                           x
+     2     INT16                           y
+*/

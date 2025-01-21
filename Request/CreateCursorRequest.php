@@ -4,14 +4,14 @@ namespace X11;
 
 class CreateCursorRequest extends Request {
 
-  public function __construct($cursor, $source, $mask, $foreRed, $foreGree, $foreBlue, $backRed, $backGreen, $backBlue, $x, $y) {
-    $this->doRequest([
+  public function __construct($cursor, $source, $mask, $foreRed, $foreGreen, $foreBlue, $backRed, $backGreen, $backBlue, $x, $y) {
+    $this->sendRequest([
       ['opcode', 93, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 8, Type::CARD16],
       ['cursor', $cursor, Type::CURSOR],
-      ['source', $cursor, Type::PIXMAP],
-      ['mask', $cursor, Type::PIXMAP],
+      ['source', $source, Type::PIXMAP],
+      ['mask', $mask, Type::PIXMAP],
       ['foreRed', $foreRed, Type::CARD16],
       ['foreGreen', $foreGreen, Type::CARD16],
       ['foreBlue', $foreBlue, Type::CARD16],
@@ -21,10 +21,6 @@ class CreateCursorRequest extends Request {
       ['x', $x, Type::INT16],
       ['y', $y, Type::INT16]
     ]);
-  }
-
-  protected function processResponse() {
-    return false;
   }
 
 }

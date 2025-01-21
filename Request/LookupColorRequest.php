@@ -7,7 +7,7 @@ class LookupColorRequest extends Request {
   public function __construct($colormap, $name) {
     $length = strlen($name);
     $pad = Connection::pad4($length);
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 92, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 3 + (($length + $pad) >> 2), Type::CARD16],

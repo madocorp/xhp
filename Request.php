@@ -6,6 +6,7 @@ class Request {
 
   protected function debugRequest($data, $request) {
     $requestName = basename(str_replace('\\', '/', get_class($this)));
+    echo "\033[32m"; // green
     echo "\n", str_pad("[ Request: {$requestName} ]", 120, '-', STR_PAD_BOTH), "\n";
     foreach ($data as $field) {
       if ($field[2] == Type::STRING8) {
@@ -24,22 +25,68 @@ class Request {
       }
       echo " {$field[0]}\n";
     }
-    $bytes = unpack('C*', $request);
-    echo '| ';
-    foreach ($bytes as $i => $byte) {
-      $hex = dechex($byte);
-      echo '0x', ($byte < 0x10 ? '0' : ''), $hex, ' ';
-      if ($i % 4 == 0) {
-        echo '| ';
-      }
-      if ($i % 16 == 0) {
-        echo "\n| ";
-      }
-    }
-    echo "\n";
+    Connection::byteDebug($request);
+    echo "\033[0m"; // reset
   }
 
-  protected function doRequest($data) {
+  protected function preprocessRequestData($data) {
+    $data2 = [];
+    $length = 0;
+    foreach ($data as $field) {
+      if ($field[2] == Type::VLIST) {
+        $maskpos = count($data2);
+        $data2[] = ['valueMask', 0, Type::CARD32];
+        $values = $field[1];
+        $valueMap = $field[3];
+        $valueMask = 0;
+        foreach ($valueMap as $i => $map) {
+          $name = $map[0];
+          if (!isset($values[$name])) {
+            continue;
+          }
+          $valueMask |= pow(2, $i);
+          array_splice($map, 1, 0, $values[$name]);
+          $data2[] = $map;
+          $fieldLength = Type::$size[Type::$format[$map[2]]];
+          if ($fieldLength < 4) {
+            $data2[] = ['pad', 4 - $fieldLength, Type::PAD4];
+          }
+        }
+        $length += count($values);
+        $data2[$maskpos][1] = $valueMask;
+      } else if ($field[2] == Type::FLIST) {
+        $foos = $field[1];
+        $fooMap = $field[3];
+        $fooLength = 0;
+        foreach ($fooMap as $fooField) {
+          $fooLength += Type::$size[Type::$format[$fooField[1]]];
+        }
+        foreach ($foos as $foo) {
+          foreach ($fooMap as $fooField) {
+            $fooFieldWithValue = $fooField;
+            array_splice($fooFieldWithValue, 1, 0, $foo[$fooField[0]]);
+            $data2[] = $fooFieldWithValue;
+          }
+        }
+        $length += (count($foos) * $fooLength) >> 2;
+      } else if ($field[2] == Type::STRING8) {
+        $data2[] = $field;
+        $n = strlen($field[1]);
+        $p = Connection::pad4($n);
+        if ($p > 0) {
+          $data2[] = ['pad', $p, Type::PAD4];
+        }
+        $length += (($n + $p) >> 2);
+      } else {
+        $data2[] = $field;
+      }
+    }
+    $data2[2][1] += $length;
+    return $data2;
+  }
+
+  protected function sendRequest($data) {
+    $data = $this->preprocessRequestData($data);
     $formatString = '';
     $values = [];
     foreach ($data as $field) {
@@ -65,35 +112,6 @@ class Request {
       $this->debugRequest($data, $request);
     }
     Connection::write($request);
-  }
-
-  protected function addBitmaskList($data, $valueMap, $values) {
-    $valueMask = 0;
-    $valueList = [];
-    $length = 0;
-    foreach ($valueMap as $i => $map) {
-      $name = $map[0];
-      if (!isset($values[$name])) {
-        continue;
-      }
-      $type = $map[1];
-      $value = $values[$name];
-      if (in_array($type, [Type::ENUM8, Type::ENUM16, Type::ENUM32])) {
-        $possibleValues = $map[2];
-        $valueList[] = [$name, $value, $type, $possibleValues];
-      } else {
-        $valueList[] = [$name, $value, $type];
-      }
-      $fieldLength = Type::$size[Type::$format[$type]];
-      if ($fieldLength < 4) {
-        $valueList[] = ['pad', 4 - $fieldLength, Type::PAD4];
-      }
-      $length += 4;
-      $valueMask |= pow(2, $i);
-    }
-    $data[2][1] += $length >> 2;
-    $data[] = ['valueMask', $valueMask, Type::CARD32];
-    return array_merge($data, $valueList);
   }
 
   protected function debugResponse($response) {

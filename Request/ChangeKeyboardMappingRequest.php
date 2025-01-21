@@ -19,7 +19,7 @@ class ChangeKeyboardMappingRequest extends Request {
         $data[] = ['keysym', $keysym, Type::KEYSYM];
       }
     }
-    $this->doRequest($data);
+    $this->sendRequest($data);
   }
 
   protected function processResponse() {

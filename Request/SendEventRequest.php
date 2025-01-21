@@ -5,7 +5,7 @@ namespace X11;
 class SendEventRequest extends Request {
 
   public function __construct($propagate, $destination, $eventMask, $event) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 25, Type::BYTE],
       ['propagate', 0, Type::BOOL],
       ['requestLength', 11, Type::CARD16],

@@ -5,13 +5,13 @@ namespace X11;
 class CopyPlaneRequest extends Request {
 
   public function __construct($srcDrawable, $dstDrawable, $gc, $srcX, $srcY, $dstX, $dstY, $width, $height, $bitPlane) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 63, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 8, Type::CARD16],
       ['srcDrawable', $srcDrawable, Type::DRAWABLE],
       ['dstDrawable', $dstDrawable, Type::DRAWABLE],
-      ['gc', $gc, Type::GCCONTEXT],
+      ['gc', $gc, Type::GCONTEXT],
       ['srcX', $srcX, Type::INT16],
       ['srcY', $srcY, Type::INT16],
       ['dstX', $dstX, Type::INT16],

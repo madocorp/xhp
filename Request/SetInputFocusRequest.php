@@ -5,7 +5,7 @@ namespace X11;
 class SetInputFocusRequest extends Request {
 
   public function __construct($revertTo, $window, $timestamp) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 42, Type::BYTE],
       ['revertTo', $revertTo, Type::ENUM8, ['None', 'PointerRoot', 'Parent']],
       ['requestLength', 3, Type::CARD16],

@@ -9,8 +9,8 @@ class CopyGCRequest extends Request {
       ['opcode', 57, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 4, Type::CARD16],
-      ['srcGc', $srcGc, Type::GCCONTEXT],
-      ['dstGc', $dstGc, Type::GCCONTEXT]
+      ['srcGc', $srcGc, Type::GCONTEXT],
+      ['dstGc', $dstGc, Type::GCONTEXT]
     ];
     $valueMap = [
       'function' => [Type::ENUM8, ['Clear', 'And', 'AndReverse', 'Copy', 'AddInverted', 'NoOp', 'Xor', 'Or', 'Nor', 'Equiv', 'Invert', 'OrReverse', 'CopyInverted', 'OrInverted', 'Nand', 'Set']],
@@ -38,7 +38,7 @@ class CopyGCRequest extends Request {
       'arcMode' => [Type::ENUM8, ['Chord', 'PieSlice']],
     ];
     $data = $this->addBitmaskList($data, $valueMap, $values);
-    $this->doRequest($data);
+    $this->sendRequest($data);
   }
 
   protected function processResponse() {

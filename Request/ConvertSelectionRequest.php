@@ -5,7 +5,7 @@ namespace X11;
 class ConvertSelectionRequest extends Request {
 
   public function __construct($requestor, $selection, $target, $property, $timestamp) {
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 24, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 6, Type::CARD16],

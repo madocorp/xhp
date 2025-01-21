@@ -6,7 +6,7 @@ class SetFontPathRequest extends Request {
 
   public function __construct($path) {
     $length = strlen($path);
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 51, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 2, Type::CARD16],

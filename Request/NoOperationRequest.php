@@ -6,7 +6,7 @@ class NoOperationRequest extends Request {
 
   public function __construct($n) {
     $unused = pack('C*', array_fill(0, $n * 4, 0));
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 127, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 1 + $n, Type::CARD16],

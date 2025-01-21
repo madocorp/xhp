@@ -6,11 +6,11 @@ class SetDashesRequest extends Request {
 
   public function __construct($gc, $dashOffset, $dashes) {
     $length = strlen($dashes);
-    $this->doRequest([
+    $this->sendRequest([
       ['opcode', 58, Type::BYTE],
       ['unused', 0, Type::BYTE],
       ['requestLength', 3, Type::CARD16],
-      ['gc', $gc, Type::GCCONTEXT],
+      ['gc', $gc, Type::GCONTEXT],
       ['dashOffset', $dashOffset, Type::CARD16],
       ['n', $length, Type::CARD16],
       ['dashes', $dashes, Type::STRING8],
