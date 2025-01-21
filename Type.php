@@ -4,22 +4,22 @@ namespace X11;
 
 class Type {
 
-  const ID = 0; // WINDOW, PIXMAP, CURSOR, FONT, GCONTEXT, COLORMAP, DRAWABLE, FONTABLE, ATOM, VISUALID
   const BYTE = 1;
-  const BOOL = 1;
-  const INT8 = 2;
-  const INT16 = 3;
-  const INT32 = 4;
-  const CARD8 = 5;
-  const CARD16 = 6;
-  const CARD32 = 7;
-  const ENUM8 = 11;
-  const ENUM16 = 12;
-  const ENUM32 = 13;
-  const STRING8 = 14;
-  const PAD4 = 15;
-  const LIST = 16;
-  const EVENT = 17;
+  const BOOL = 2;
+  const INT8 = 3;
+  const INT16 = 4;
+  const INT32 = 5;
+  const CARD8 = 6;
+  const CARD16 = 7;
+  const CARD32 = 8;
+  const ENUM8 = 9;
+  const ENUM16 = 10;
+  const ENUM32 = 11;
+  const STRING8 = 12;
+  const PAD4 = 13;
+  const VLIST = 14;
+  const FLIST = 15;
+  const EVENT = 16;
 
   const BITMASK = self::CARD32;
   const WINDOW = self::CARD32;
@@ -35,7 +35,6 @@ class Type {
   const TIMESTAMP = self::CARD32;
 
   public static $format = [
-    self::ID => 'L',
     self::BYTE => 'C',
     self::BOOL => 'C',
     self::INT8 => 'c',

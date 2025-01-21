@@ -2,19 +2,11 @@
 
 namespace X11;
 
-require_once 'Type.php';
-require_once 'Atom.php';
-require_once 'Request.php';
-require_once 'Response.php';
-require_once 'Event.php';
-require_once 'Error.php';
-
-define('DEBUG', true);
-
 class Connection {
 
   protected static $socket;
   protected static $id = 0;
+  protected static $lastResponse = false;
   public static $data;
 
   public static function init() {
@@ -26,7 +18,9 @@ class Connection {
     $path = "/tmp/.X11-unix/X{$displayNumber}";
     self::$socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
     socket_connect(self::$socket, $path);
-    self::$data = Request::ConnectionInit(self::machineByteOrder());
+    new ConnectionInitRequest(self::machineByteOrder());
+    self::$data = self::$lastResponse;
+    self::$lastResponse = false;
   }
 
   public static function close() {
@@ -99,5 +93,15 @@ class Connection {
     return (4 - ($e % 4)) % 4;
   }
 
+  public static function setResponse($response) {
+    self::$lastResponse = $response;
+  }
+
+  public static function getLastResponse() {
+    return self::$lastResponse;
+  }
+
 }
+
+
 
