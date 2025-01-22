@@ -27,10 +27,10 @@ class ConnectionInitRequest extends Request {
       ['protocolMajorVersion', Type::CARD16],
       ['protocolMinorVersion', Type::CARD16],
       ['fullLength', Type::CARD16]
-    ]);
+    ], false);
     $reason = $this->receiveResponse([
       ['reason', Type::STRING8, $response['lengthOfReason']]
-    ]);
+    ], false);
     throw new \Exception("Connection failed: {$reason}");
   }
 
@@ -55,10 +55,10 @@ class ConnectionInitRequest extends Request {
       ['minKeycode', Type::CARD8],
       ['maxKeycode', Type::CARD8],
       ['unused', Type::CARD32]
-    ]);
+    ], false);
     $vendor = $this->receiveResponse([
       ['vendor', Type::STRING8, $response['lengthOfVendor']]
-    ]);
+    ], false);
     $formats = [];
     for ($i = 0; $i < $response['numberOfFormats']; $i++) {
       $formats[] = $this->receiveResponse([
@@ -70,7 +70,7 @@ class ConnectionInitRequest extends Request {
         ['unused', Type::BYTE],
         ['unused', Type::BYTE],
         ['unused', Type::BYTE],
-      ]);
+      ], false);
     }
     $screens = [];
     for ($i = 0; $i < $response['numberOfScreens']; $i++) {
@@ -91,7 +91,7 @@ class ConnectionInitRequest extends Request {
         ['saveUnders', Type::BOOL],
         ['rootDepth', Type::CARD8],
         ['numberOfDepths', Type::CARD8]
-      ]);
+      ], false);
       $depths = [];
       for ($j = 0; $j < $screen['numberOfDepths']; $j++) {
         $depth = $this->receiveResponse([
@@ -99,7 +99,7 @@ class ConnectionInitRequest extends Request {
           ['unused', Type::BYTE],
           ['numberOfVisualTypes', Type::CARD16],
           ['unused', Type::CARD32]
-        ]);
+        ], false);
         $visualsTypes = [];
         for ($k = 0; $k < $depth['numberOfVisualTypes']; $k++) {
           $visualTypes[] = $this->receiveResponse([
@@ -111,7 +111,7 @@ class ConnectionInitRequest extends Request {
             ['greenMask', Type::CARD32],
             ['blueMask', Type::CARD32],
             ['unused', Type::CARD32],
-          ]);
+          ], false);
         }
         $depth['visualTypes'] = $visualTypes;
         $depths[] = $depth;
@@ -131,17 +131,17 @@ class ConnectionInitRequest extends Request {
       ['unused', Type::BYTE],
       ['unused', Type::BYTE],
       ['length', Type::CARD16],
-    ]);
+    ], false);
     $reason = $this->receiveResponse([
       ['reason', Type::STRING8, $response['length'] << 2]
-    ]);
+    ], false);
     throw new \Exception("Authentication required: {$reason}");
   }
 
   protected function processResponse() {
     $status = $this->receiveResponse([
       ['status', Type::ENUM8, ['Failed', 'Success', 'Authenticate']]
-    ]);
+    ], false);
     switch ($status) {
       case 'Failed':
         return $this->connectionFailed();

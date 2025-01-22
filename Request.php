@@ -5,10 +5,11 @@ namespace X11;
 class Request {
 
   protected function debugRequest($data, $request) {
+    $maxDebugRows = 15;
     $requestName = basename(str_replace('\\', '/', get_class($this)));
     echo "\033[32m"; // green
     echo "\n", str_pad("[ Request: {$requestName} ]", 120, '-', STR_PAD_BOTH), "\n";
-    foreach ($data as $field) {
+    foreach ($data as $n => $field) {
       if ($field[2] == Type::STRING8) {
         echo str_pad('"' . $field[1] . '"', 40, ' ', STR_PAD_LEFT);
         echo str_pad('[' . strlen($field[1]) . ']', 26, ' ', STR_PAD_LEFT);
@@ -24,6 +25,10 @@ class Request {
         echo str_pad(' [' . Type::$size[Type::$format[$field[2]]] . ']', 10, ' ', STR_PAD_LEFT);
       }
       echo " {$field[0]}\n";
+      if ($n >= $maxDebugRows) {
+        echo "... (+" . count($data) - $n - 1 . " rows)\n";
+        break;
+      }
     }
     Connection::byteDebug($request);
     echo "\033[0m"; // reset
@@ -116,13 +121,39 @@ class Request {
 
   protected function debugResponse($response) {
     foreach ($response as $name => $value) {
+      if (is_bool($value)) {
+        $value = $value ? 'true' : 'false';
+      } else if (is_int($value)) {
+        $value = sprintf("%d  (0x%x)", $value, $value);
+      }
       echo '▶  ', $name, ': ', $value, "\n";
     }
     echo "\n";
   }
 
-  protected function receiveResponse($specification) {
-    $length = 0;
+  protected function waitForResponse() {
+    while (true) {
+      $bytes = Connection::read(32);
+      $header = unpack('Ctype/x5/Slength', $bytes);
+      if ($header['type'] == 0) {
+        Error::handle($bytes);
+      } else  if ($header['type'] > 1) {
+        Event::handle($bytes);
+      } else {
+        break;
+      }
+    }
+    return $bytes;
+  }
+
+  protected function receiveResponse($specification, $start = true) {
+    if ($start) {
+      $bytes = self::waitForResponse();
+      $length = -32;
+    } else {
+      $bytes = '';
+      $length = 0;
+    }
     $formatString = [];
     $enums = [];
     $bools = [];
@@ -132,13 +163,19 @@ class Request {
       $format = Type::$format[$type];
       if ($type == Type::STRING8) {
         $stringLength = $field[2];
+        $pad = true;
+        if (isset($field[3]) && $field[3] == false) {
+          $pad = false;
+        }
         $format = str_replace('*', $stringLength, $format);
         $formatString[] = "{$format}{$name}";
         $length += $stringLength;
-        $pad = Connection::pad4($stringLength);
-        if ($pad > 0) {
-          $formatString[] = "x{$pad}";
-          $length += $pad;
+        if ($pad) {
+          $pad = Connection::pad4($stringLength);
+          if ($pad > 0) {
+            $formatString[] = "x{$pad}";
+            $length += $pad;
+          }
         }
       } else {
         $formatString[] = "{$format}{$name}";
@@ -152,20 +189,22 @@ class Request {
       }
     }
     $formatString = implode('/', $formatString);
-    $response = Connection::read($length);
-    $response = unpack($formatString, $response);
+    if ($length > 0) {
+      $bytes .= Connection::read($length);
+    }
+    $response = unpack($formatString, $bytes);
     foreach ($enums as $name => $values) {
       $response[$name] = $values[$response[$name]];
     }
     foreach ($bools as $name) {
       $response[$name] = ($response[$name] > 0);
     }
-    if (count($response) == 1) {
-      return reset($response);
-    }
     unset($response['unused']);
     if (X11_DEBUG) {
       $this->debugResponse($response);
+    }
+    if (count($response) == 1) {
+      return reset($response);
     }
     return $response;
   }

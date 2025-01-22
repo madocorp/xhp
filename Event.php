@@ -365,6 +365,7 @@ class Event {
     'ColormapNotify', 'ClientMessage', 'MappingNotify'
   ];
   protected static $end = false;
+  protected static $eventHandler = false;
 
   protected static function debug($event, $name) {
     echo "\033[36m"; // cyan
@@ -406,11 +407,21 @@ class Event {
     return $event;
   }
 
-  public static function loop($eventHandler) {
+  public static function handle($bytes) {
+    $event = self::bytesToArray($bytes);
+    if (self::$eventHandler !== false) {
+      call_user_func(self::$eventHandler, $event);
+    }
+  }
+
+  public static function setHandler($eventHandler) {
+    self::$eventHandler = $eventHandler;
+  }
+
+  public static function loop() {
     while (!self::$end) {
       $bytes = Connection::read(32);
-      $event = self::bytesToArray($bytes);
-      call_user_func($eventHandler, $event);
+      self::handle($bytes);
     }
   }
 

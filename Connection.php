@@ -102,6 +102,11 @@ class Connection {
   }
 
   public static function byteDebug($bytes) {
+    $cut = '';
+    if (strlen($bytes) > 128) {
+      $cut = "\n... (+" . strlen($bytes) - 128 . " bytes)";
+      $bytes = substr($bytes, 0, 128);
+    }
     echo "\033[33m"; // yellow
     $bytes = unpack('C*', $bytes);
     $n = count($bytes);
@@ -116,7 +121,7 @@ class Connection {
         echo "\n| ";
       }
     }
-    echo "\n";
+    echo "{$cut}\n";
     echo "\033[0m"; // reset
   }
 

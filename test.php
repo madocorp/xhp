@@ -17,6 +17,8 @@ function zzz() {
   usleep(50000);
 }
 
+Event::setHandler('\X11\eventHandler');
+
 \X11\Connection::init();
 $screen = \X11\Connection::$data['screens'][0];
 
@@ -33,8 +35,8 @@ new \X11\CreateWindowRequest(
   $class, $visual, $values
 );
 new \X11\ChangePropertyRequest('Replace', $wid1, Atom::WM_NAME, Atom::STRING, 8, 'Hello World!');
-new \X11\GetWindowAttributesRequest($wid1);
 new \X11\MapWindowRequest($wid1);
+new \X11\GetWindowAttributesRequest($wid1);
 
 zzz();
 $wid2 = Connection::generateId();
@@ -134,28 +136,56 @@ zzz();
 new \X11\PolyFillArcRequest($wid1, $gcid, [['x' => 500, 'y' => 100, 'width' => 100, 'height' => 50, 'angle1' => 0, 'angle2' => 180 * 64]]);
 
 zzz();
+new \X11\FillPolyRequest($wid1, $gcid, 'Convex', 'Origin', [['x' => 100, 'y' => 0], ['x' => 200, 'y' => 0], ['x' => 150, 'y' => 50]]);
+
+zzz();
 new \X11\ClearAreaRequest(false, $wid1, 200, 200, 200, 200);
 
+zzz();
 $pmid1 = Connection::generateId();
-new \X11\CreatePixmapRequest(1, $pmid1, $wid1, 16, 16);
-// new \X11\PutImageRequest('Bitmap', $pmid1, $gcid, 16, 16, 0, 0, 0, 1, pack("C*", ...array_fill(0, 32, 0xff)));
+new \X11\CreatePixmapRequest(1, $pmid1, $wid1, 32, 32);
+$pmid2 = Connection::generateId();
+new \X11\CreatePixmapRequest(1, $pmid2, $wid1, 32, 32);
+$gcid2 = Connection::generateId();
+new \X11\CreateGCRequest($gcid2, $pmid1, []);
+new \X11\ChangeGCRequest($gcid2, ['foreground' => 1, 'background' => 0]);
+new \X11\PolyFillRectangleRequest($pmid2, $gcid2, [['x' => 0, 'y' => 0, 'width' => 32, 'height' => 32]]);
+new \X11\PolyFillRectangleRequest($pmid1, $gcid2, [['x' => 0, 'y' => 0, 'width' => 32, 'height' => 32]]);
+new \X11\ChangeGCRequest($gcid2, ['foreground' => 0, 'background' => 1]);
+new \X11\PolyFillRectangleRequest($pmid1, $gcid2, [['x' => 0, 'y' => 0, 'width' => 16, 'height' => 16]]);
+new \X11\PolyFillRectangleRequest($pmid2, $gcid2, [['x' => 8, 'y' => 8, 'width' => 16, 'height' => 16]]);
+new \X11\ChangeGCRequest($gcid2, ['foreground' => 1, 'background' => 0]);
 $crid1 = Connection::generateId();
-new \X11\CreateCursorRequest($crid1, $pmid1, $pmid1, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0, 0);
+new \X11\CreateCursorRequest($crid1, $pmid1, $pmid2, 0xffff, 0xffff, 0x0, 0xffff, 0x0, 0x0, 16, 16);
 new \X11\ChangeWindowAttributesRequest($wid1, ['cursor' => $crid1]);
 
-new \X11\UnmapSubwindowsRequest($wid1);
+zzz();
+$pmid3 = Connection::generateId();
+new \X11\CreatePixmapRequest(24, $pmid3, $root, 100, 100);
+new \X11\PutImageRequest('ZPixmap', $pmid3, $gcid, 100, 100, 0, 0, 0, 24, pack("C*", ...array_fill(0, 4*100*100, 0xff)));
+new \X11\PolyArcRequest($pmid3, $gcid, [['x' => 10, 'y' => 10, 'width' => 80, 'height' => 80, 'angle1' => 0, 'angle2' => 360 * 64]]);
+new \X11\CopyAreaRequest($pmid3, $wid1, $gcid, 0, 0, 300, 300, 100, 100);
 
-$pmid2 = Connection::generateId();
-new \X11\CreatePixmapRequest(24, $pmid2, $root, 100, 100);
-new \X11\PutImageRequest('ZPixmap', $pmid2, $gcid, 100, 100, 0, 0, 0, 24, pack("C*", ...array_fill(0, 4*100*100, 0xff)));
-new \X11\PolyArcRequest($pmid2, $gcid, [['x' => 10, 'y' => 10, 'width' => 80, 'height' => 80, 'angle1' => 0, 'angle2' => 360 * 64]]);
-new \X11\CopyAreaRequest($pmid2, $wid1, $gcid, 0, 0, 300, 300, 100, 100);
+zzz();
+new \X11\ListFontsRequest(1000, '*fixed*');
 
+$fid1 = Connection::generateId();
+new \X11\OpenFontRequest($fid1, '-misc-fixed-medium-r-semicondensed--0-0-75-75-c-0-iso8859-2');
+$fid2 = Connection::generateId();
+new \X11\OpenFontRequest($fid2, '-misc-fixed-medium-r-normal-ko-0-0-100-100-c-0-iso10646-1');
+new \X11\ChangeGCRequest($gcid, ['font' => $fid1, 'background' => 0x550000]);
+new \X11\ImageText8Request($wid2, $gcid, 10, 10, mb_convert_encoding('Hello Wőrld!','ISO8859-2','UTF-8'));
+new \X11\ChangeGCRequest($gcid, ['font' => $fid2, 'background' => 0x550000]);
+new \X11\ImageText16Request($wid2, $gcid, 10, 30, 'Hélló Wőrld!');
+
+
+zzz();
+new \X11\NoOperationRequest(16);
 
 zzz();
 new \X11\BellRequest(50);
 
-Event::loop('\X11\eventHandler');
+Event::loop();
 
 new \X11\DestroySubwindowsRequest($wid1);
 
