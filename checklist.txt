@@ -1,0 +1,122 @@
+AllocColorCellsRequest
+AllocColorPlanesRequest
+AllocColorRequest
+AllocNamedColorRequest
+AllowEventsRequest
+*   BellRequest
+ChangeActivePointerGrabRequest
+*   ChangeGCRequest
+ChangeHostsRequest
+ChangeKeyboardControlRequest
+ChangeKeyboardMappingRequest
+ChangePointerControlRequest
+*   ChangePropertyRequest
+*   ChangeSaveSetRequest
+*   ChangeWindowAttributesRequest
+*   CirculateWindowRequest
+* ClearAreaRequest
+CloseFontRequest
+*   ConfigureWindowRequest
+*   ConnectionInitRequest
+ConvertSelectionRequest
+*   CopyAreaRequest
+CopyColormapAndFreeRequest
+CopyGCRequest
+CopyPlaneRequest
+CreateColormapRequest
+*   CreateCursorRequest
+*   CreateGCRequest
+CreateGlyphCursorRequest
+*   CreatePixmapRequest
+*   CreateWindowRequest
+DeletePropertyRequest
+*   DestroySubwindowsRequest
+*   DestroyWindowRequest
+*   FillPolyRequest
+ForceScreenSaverRequest
+FreeColormapRequest
+FreeColorsRequest
+FreeCursorRequest
+FreeGCRequest
+FreePixmapRequest
+GetAtomNameRequest
+GetFontPathRequest
+GetGeometryRequest
+GetImageRequest
+GetInputFocusRequest
+GetKeyboardControlRequest
+GetKeyboardMappingRequest
+GetModifierMappingRequest
+GetMotionEventsRequest
+GetPointerControlRequest
+GetPointerMappingRequest
+GetPropertyRequest
+GetScreenSaverRequest
+GetSelectionOwnerRequest
+GetWindowAttributesRequest
+GrabButtonRequest
+GrabKeyboardRequest
+GrabKeyRequest
+GrabPointerRequest
+GrabServerRequest
+InstallColormapRequest
+InternAtomRequest
+KillClientRequest
+ListExtensionsRequest
+*    ListFontsRequest
+ListFontsWithInfoRequest
+ListHostsRequest
+ListInstalledColormapsRequest
+ListPropertiesRequest
+LookupColorRequest
+*   MapSubwindowsRequest
+*   MapWindowRequest
+*   NoOperationRequest
+*   OpenFontRequest
+*   PolyArcRequest
+*   PolyFillArcRequest
+*   PolyFillRectangleRequest
+*   PolyLineRequest
+*   PolyPointRequest
+*   PolyRectangleRequest
+*   PolySegmentRequest
+*   PutImageRequest
+QueryBestSizeRequest
+QueryColorsRequest
+QueryExtensionRequest
+QueryFontRequest
+QueryKeymapRequest
+QueryPointerRequest
+QueryTextExtentsRequest
+QueryTreeRequest
+RecolorCursorRequest
+*   ReparentWindowRequest
+RotatePropertiesRequest
+SendEventRequest
+SetAccessControlRequest
+SetClipRectanglesRequest
+SetCloseDownModeRequest
+SetDashesRequest
+SetFontPathRequest
+SetInputFocusRequest
+SetModifierMappingRequest
+SetPointerMappingRequest
+SetScreenSaverRequest
+SetSelectionOwnerRequest
+StoreColorsRequest
+StoreNamedColorRequest
+TranslateCoordinatesRequest
+UngrabButtonRequest
+UngrabKeyboardRequest
+UngrabKeyRequest
+UngrabPointerRequest
+UngrabServerRequest
+UninstallColormapRequest
+*   UnmapSubwindowsRequest
+*   UnmapWindowRequest
+WarpPointerRequest
+*   ImageText8Request
+*   ImageText16Request
+PolyText8Request
+PolyText16Request
+
