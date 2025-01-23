@@ -15,25 +15,21 @@ class QueryPointerRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['root', Type::WINDOW],
+      ['child', Type::WINDOW],
+      ['rootX', Type::INT16],
+      ['rootY', Type::INT16],
+      ['winX', Type::INT16],
+      ['winY', Type::INT16],
+      ['mask', Type::INT16],
+      ['unused', Type::STRING8, 6, false]
+    ]);
   }
 
 }
 
-/*
-  public static function QueryPointer() {
-▶
-     1     1                               Reply
-     1     BOOL                            same-screen
-     2     CARD16                          sequence number
-     4     0                               reply length
-     4     WINDOW                          root
-     4     WINDOW                          child
-          0     None
-     2     INT16                           root-x
-     2     INT16                           root-y
-     2     INT16                           win-x
-     2     INT16                           win-y
-     2     SETofKEYBUTMASK                 mask
-     6                                     unused
-*/

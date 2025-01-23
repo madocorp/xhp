@@ -29,12 +29,12 @@ CopyPlaneRequest
 *   CreateGlyphCursorRequest
 *   CreatePixmapRequest
 *   CreateWindowRequest
-DeletePropertyRequest
+*   DeletePropertyRequest
 *   DestroySubwindowsRequest
 *   DestroyWindowRequest
 *   FillPolyRequest
 *   ForceScreenSaverRequest
-FreeColormapRequest
+*   FreeColormapRequest
 FreeColorsRequest
 *   FreeCursorRequest
 *   FreeGCRequest
@@ -53,7 +53,7 @@ GetPointerMappingRequest
 GetPropertyRequest
 GetScreenSaverRequest
 GetSelectionOwnerRequest
-GetWindowAttributesRequest
+*   GetWindowAttributesRequest
 GrabButtonRequest
 GrabKeyboardRequest
 GrabKeyRequest
@@ -67,7 +67,7 @@ KillClientRequest
 ListFontsWithInfoRequest
 *   ListHostsRequest
 *   ListInstalledColormapsRequest
-ListPropertiesRequest
+*   ListPropertiesRequest
 LookupColorRequest
 *   MapSubwindowsRequest
 *   MapWindowRequest
@@ -82,14 +82,14 @@ LookupColorRequest
 *   PolySegmentRequest
 *   PutImageRequest
 *   QueryBestSizeRequest
-QueryColorsRequest
+*   QueryColorsRequest
 *   QueryExtensionRequest
-QueryFontRequest
-QueryKeymapRequest
-QueryPointerRequest
-QueryTextExtentsRequest
-QueryTreeRequest
-RecolorCursorRequest
+*   QueryFontRequest
+*   QueryKeymapRequest
+*   QueryPointerRequest
+*   QueryTextExtentsRequest
+*   QueryTreeRequest
+*   RecolorCursorRequest
 *   ReparentWindowRequest
 RotatePropertiesRequest
 SendEventRequest

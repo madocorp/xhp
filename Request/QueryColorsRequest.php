@@ -5,41 +5,40 @@ namespace X11;
 class QueryColorsRequest extends Request {
 
   public function __construct($colormap, $pixels) {
-    $data = [
+    $this->sendRequest([
       ['opcode', 91, Type::BYTE],
       ['unused', 0, Type::BYTE],
-      ['requestLength', 2 + count($pixels), Type::CARD16],
+      ['requestLength', 2, Type::CARD16],
       ['cmap', $colormap, Type::COLORMAP],
-    ];
-    foreach ($pixels as $pixel) {
-      $data[] = ['pixel', $pixel, Type::CARD32];
-    }
-    $this->sendRequest($data);
+      ['pixels', $pixels, Type::FLIST, [
+        ['pixel', Type::CARD32]
+      ]]
+    ]);
     Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['n', Type::CARD16]
+    ]);
+    $n = $response['n'];
+    $colors = [];
+    for ($i = 0; $i < $n; $i++) {
+      $color = $this->receiveResponse([
+        ['red', Type::CARD16],
+        ['green', Type::CARD16],
+        ['blue', Type::CARD16],
+        ['unused', Type::CARD16]
+      ], false);
+      $colors[] = $color;
+    }
+    $response['colors'] = $colors;
+    return $response;
   }
 
 }
-
-/*
-  public static function QueryColors() {
-▶
-     1     1                               Reply
-     1                                     unused
-     2     CARD16                          sequence number
-     4     2n                              reply length
-     2     n                               number of RGBs in colors
-     22                                    unused
-     8n     LISTofRGB                      colors
-
-  RGB
-     2     CARD16                          red
-     2     CARD16                          green
-     2     CARD16                          blue
-     2                                     unused
-*/
-  }
 

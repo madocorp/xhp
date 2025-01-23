@@ -4,7 +4,7 @@ namespace X11;
 
 class RecolorCursorRequest extends Request {
 
-  public function __construct($cursor, $foreRed, $foreGree, $foreBlue, $backRed, $backGreen, $backBlue) {
+  public function __construct($cursor, $foreRed, $foreGreen, $foreBlue, $backRed, $backGreen, $backBlue) {
     $this->sendRequest([
       ['opcode', 96, Type::BYTE],
       ['unused', 0, Type::BYTE],
@@ -17,10 +17,6 @@ class RecolorCursorRequest extends Request {
       ['backGreen', $backGreen, Type::CARD16],
       ['backBlue', $backBlue, Type::CARD16]
     ]);
-  }
-
-  protected function processResponse() {
-    return false;
   }
 
 }

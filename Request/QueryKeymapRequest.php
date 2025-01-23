@@ -14,7 +14,15 @@ class QueryKeymapRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['keys', Type::STRING8, 32, false]
+    ]);
+    $response['keys'] = array_values(unpack('C32', $response['keys']));
+    return $response;
   }
 
 }

@@ -15,13 +15,69 @@ class QueryFontRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    $charinfo = [
+      ['leftSideBearing', Type::INT16],
+      ['rightSideBearing', Type::INT16],
+      ['characterWidth', Type::INT16],
+      ['ascent', Type::INT16],
+      ['descent', Type::INT16],
+      ['attributes', Type::CARD16]
+    ];
+    $fontprop = [
+      ['atom', Type::ATOM],
+      ['value', Type::CARD32]
+    ];
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['minBoundsLeftSideBearing', Type::INT16],
+      ['minBoundsRightSideBearing', Type::INT16],
+      ['minBoundsCharacterWidth', Type::INT16],
+      ['minBoundsAscent', Type::INT16],
+      ['minBoundsDescent', Type::INT16],
+      ['minBoundsAttributes', Type::CARD16],
+      ['unused', Type::CARD32],
+      ['maxBoundsLeftSideBearing', Type::INT16],
+      ['maxBoundsRightSideBearing', Type::INT16],
+      ['maxBoundsCharacterWidth', Type::INT16],
+      ['maxBoundsAscent', Type::INT16],
+      ['mxaBoundsDescent', Type::INT16],
+      ['maxBoundsAttributes', Type::CARD16],
+      ['unused', Type::CARD32],
+      ['minCharOrByte2', Type::CARD16],
+      ['maxCharOrByte2', Type::CARD16],
+      ['defaultChar', Type::CARD16],
+      ['n', Type::CARD16],
+      ['drawDirection', Type::ENUM8, ['LeftToRight', 'RightToLeft']],
+      ['minByte1', Type::CARD8],
+      ['maxByte1', Type::CARD8],
+      ['allCharsExist', Type::BOOL],
+      ['fontAscent', Type::CARD16],
+      ['fontDescent', Type::CARD16],
+      ['m', Type::CARD32],
+    ], false);
+    $n = $response['n'];
+    $fontprops = [];
+    for ($i = 0; $i < $n; $i++) {
+      $prop = $this->receiveResponse($fontprop, false);
+      $fontprops[] = $prop;
+    }
+    $response['fontprops'] = $fontprops;
+    $m = $response['m'];
+    $charinfos = [];
+    for ($i = 0; $i < $m; $i++) {
+      $info = $this->receiveResponse($charinfo, false);
+      $charinfos[] = $info;
+    }
+    $response['charinfos'] = $charinfos;
+    return $response;
   }
 
 }
 
 /*
-  public static function QueryFont() {
 ▶
      1     1                               Reply
      1                                     unused
@@ -60,22 +116,5 @@ class QueryFontRequest extends Request {
      2     CARD16                          attributes
 
 */
-  }
 
-  public static funciton QueryTextExtents() {
-▶
-     1     1                               Reply
-     1                                     draw-direction
-          0     LeftToRight
-          1     RightToLeft
-     2     CARD16                          sequence number
-     4     0                               reply length
-     2     INT16                           font-ascent
-     2     INT16                           font-descent
-     2     INT16                           overall-ascent
-     2     INT16                           overall-descent
-     4     INT32                           overall-width
-     4     INT32                           overall-left
-     4     INT32                           overall-right
-     4                                     unused
-*/
+

@@ -44,7 +44,7 @@ new \X11\CreateWindowRequest(
   0, 640, 480, $borderWidth,
   'InputOutput', $visual, ['backgroundPixel' => 0x000055, 'eventMask' => 0x8003]
 );
-new \X11\ChangePropertyRequest('Replace', $wid1, Atom::WM_NAME, Atom::STRING, 8, 'Hello World!');
+new \X11\ChangePropertyRequest('Replace', $wid1, Atom::WM_NAME, Atom::STRING, 8, 'Hello World 1!');
 new \X11\MapWindowRequest($wid1);
 new \X11\GetWindowAttributesRequest($wid1);
 
@@ -55,7 +55,7 @@ new \X11\CreateWindowRequest(
   0, 200, 200, $borderWidth,
   'InputOutput', $visual, ['backgroundPixel' => 0x550000, 'eventMask' => 0x8003]
 );
-new \X11\ChangePropertyRequest('Replace', $wid2, Atom::WM_NAME, Atom::STRING, 8, 'Hello World2!');
+new \X11\ChangePropertyRequest('Replace', $wid2, Atom::WM_NAME, Atom::STRING, 8, 'Hello World 2!');
 new \X11\MapWindowRequest($wid2);
 
 zzz();
@@ -186,15 +186,17 @@ new \X11\CreateCursorRequest($crid1, $pmid1, $pmid2, 0xffff, 0xffff, 0x0, 0xffff
 new \X11\ChangeWindowAttributesRequest($wid1, ['cursor' => $crid1]);
 
 $crid2 = Connection::generateId();
-new \X11\CreateGlyphCursorRequest($crid2, $fid3, $fid3, 122, 122, 0xffff, 0xaaaa, 0x8888, 0x0, 0x0, 0x0);
+new \X11\CreateGlyphCursorRequest($crid2, $fid3, $fid3, 122, 122, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0);
 new \X11\ChangeWindowAttributesRequest($wid2, ['cursor' => $crid2]);
-
 zzz();
 $pmid3 = Connection::generateId();
 new \X11\CreatePixmapRequest(24, $pmid3, $root, 100, 100);
 new \X11\PutImageRequest('ZPixmap', $pmid3, $gcid, 100, 100, 0, 0, 0, 24, pack("C*", ...array_fill(0, 4*100*100, 0xff)));
 new \X11\PolyArcRequest($pmid3, $gcid, [['x' => 10, 'y' => 10, 'width' => 80, 'height' => 80, 'angle1' => 0, 'angle2' => 360 * 64]]);
 new \X11\CopyAreaRequest($pmid3, $wid1, $gcid, 0, 0, 300, 300, 100, 100);
+
+zzz();
+new \X11\RecolorCursorRequest($crid2,  0xffff, 0xaaaa, 0x8888, 0x0, 0x0, 0x0);
 
 zzz();
 new \X11\GetImageRequest('ZPixmap', $wid2, 0, 0, 100, 100, 0xffffffff);
@@ -212,10 +214,28 @@ new \X11\ListExtensionsRequest();
 new \X11\QueryExtensionRequest('BIG-REQUESTS');
 
 zzz();
-new \X11\GetAtomNameRequest(8);
+new \X11\ListPropertiesRequest($wid1);
+
+zzz();
+new \X11\GetAtomNameRequest(Atom::CURSOR);
 
 zzz();
 new \X11\GetFontPathRequest();
+
+zzz();
+new \X11\QueryFontRequest($fid1);
+
+zzz();
+new \X11\QueryKeymapRequest();
+
+zzz();
+new \X11\QueryPointerRequest($wid1);
+
+zzz();
+new \X11\QueryTextExtentsRequest($fid2, "Lorem ipsum...");
+
+zzz();
+new \X11\QueryTreeRequest($wid1);
 
 zzz();
 new \X11\GetGeometryRequest($root);
@@ -251,11 +271,20 @@ if ($alternativeVisual !== false) {
   new \X11\InstallColormapRequest($cmid1);
 
   zzz();
+  new \X11\QueryColorsRequest($cmid1, [['pixel' => 0x1], ['pixel' => 0xaa00aa], ['pixel' => 0x00ffff]]);
+
+  zzz();
   new \X11\ListInstalledColormapsRequest($wid2);
 
   zzz();
   new \X11\UninstallColormapRequest($cmid1);
+
+  zzz();
+  new \X11\FreeColormapRequest($cmid1);
 }
+
+zzz();
+new \X11\DeletePropertyRequest($wid1, Atom::WM_NAME);
 
 zzz();
 new \X11\NoOperationRequest(16);

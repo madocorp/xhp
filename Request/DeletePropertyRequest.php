@@ -14,8 +14,4 @@ class DeletePropertyRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }
