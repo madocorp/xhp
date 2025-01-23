@@ -13,8 +13,4 @@ class FreePixmapRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

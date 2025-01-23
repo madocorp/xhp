@@ -4,26 +4,21 @@ namespace X11;
 
 class StoreColorsRequest extends Request {
 
-  public function __construct($colormap, $colors, $doColors) {
-    $data = [
+  public function __construct($colormap, $colors) {
+    $this->sendRequest([
       ['opcode', 89, Type::BYTE],
       ['unused', 0, Type::BYTE],
-      ['requestLength', 2 + count($color) * 3, Type::CARD16],
+      ['requestLength', 2, Type::CARD16],
       ['cmap', $colormap, Type::COLORMAP],
-    ];
-    foreach ($colors as $color) {
-      $data[] = ['pixel', $color['pixel'], Type::CARD32];
-      $data[] = ['red', $color['red'], Type::CARD32];
-      $data[] = ['green', $color['green'], Type::CARD32];
-      $data[] = ['blue', $color['blue'], Type::CARD32];
-      $data[] = ['doColors', $doColors, Type::BYTE];
-      $data[] = ['unused', 0, Type::BYTE];
-    }
-    $this->sendRequest($data);
-  }
-
-  protected function processResponse() {
-    return false;
+      ['colors', $colors, Type::FLIST, [
+        ['pixel', Type::CARD32],
+        ['red', Type::CARD16],
+        ['green', Type::CARD16],
+        ['blue', Type::CARD16],
+        ['doColors', Type::BYTE],
+        ['pad', Type::BYTE]
+      ]]
+    ]);
   }
 
 }

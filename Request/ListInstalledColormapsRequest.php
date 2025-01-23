@@ -15,19 +15,25 @@ class ListInstalledColormapsRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['n', Type::CARD16],
+      ['unused', Type::STRING8, 22, false]
+    ]);
+    $colormaps = [];
+    $n = $response['n'];
+    for ($i = 0; $i < $n; $i++) {
+      $colormap = $this->receiveResponse([
+        ['colormap', Type::CARD32]
+      ], false);
+      $colormaps[] = $colormap;
+    }
+    $response['colormaps'] = $colormaps;
+    return $response;
   }
 
 }
 
-/*
-  public static function ListInstalledColormaps() {
-▶
-     1     1                               Reply
-     1                                     unused
-     2     CARD16                          sequence number
-     4     n                               reply length
-     2     n                               number of COLORMAPs in cmaps
-     22                                    unused
-     4n     LISTofCOLORMAP                 cmaps
-*/

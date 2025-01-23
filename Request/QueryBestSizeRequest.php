@@ -17,19 +17,16 @@ class QueryBestSizeRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['width', Type::CARD16],
+      ['height', Type::CARD16],
+      ['unused', Type::STRING8, 20, false]
+    ]);
   }
 
 }
 
-/*
-  public static function QueryBestSize() {
-▶
-     1     1                               Reply
-     1                                     unused
-     2     CARD16                          sequence number
-     4     0                               reply length
-     2     CARD16                          width
-     2     CARD16                          height
-     20                                    unused
-*/

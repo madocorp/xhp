@@ -12,9 +12,4 @@ class ForceScreenSaverRequest extends Request {
     ]);
   }
 
-
-  protected function processResponse() {
-    return false;
-  }
-
 }

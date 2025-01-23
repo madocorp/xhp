@@ -20,8 +20,4 @@ class WarpPointerRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

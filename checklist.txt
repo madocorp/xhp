@@ -6,7 +6,7 @@ AllowEventsRequest
 *   BellRequest
 ChangeActivePointerGrabRequest
 *   ChangeGCRequest
-ChangeHostsRequest
+*   ChangeHostsRequest
 ChangeKeyboardControlRequest
 ChangeKeyboardMappingRequest
 ChangePointerControlRequest
@@ -14,35 +14,35 @@ ChangePointerControlRequest
 *   ChangeSaveSetRequest
 *   ChangeWindowAttributesRequest
 *   CirculateWindowRequest
-* ClearAreaRequest
-CloseFontRequest
+*   ClearAreaRequest
+*   CloseFontRequest
 *   ConfigureWindowRequest
 *   ConnectionInitRequest
 ConvertSelectionRequest
 *   CopyAreaRequest
 CopyColormapAndFreeRequest
-CopyGCRequest
+*   CopyGCRequest
 CopyPlaneRequest
-CreateColormapRequest
+*   CreateColormapRequest
 *   CreateCursorRequest
 *   CreateGCRequest
-CreateGlyphCursorRequest
+*   CreateGlyphCursorRequest
 *   CreatePixmapRequest
 *   CreateWindowRequest
 DeletePropertyRequest
 *   DestroySubwindowsRequest
 *   DestroyWindowRequest
 *   FillPolyRequest
-ForceScreenSaverRequest
+*   ForceScreenSaverRequest
 FreeColormapRequest
 FreeColorsRequest
-FreeCursorRequest
-FreeGCRequest
-FreePixmapRequest
-GetAtomNameRequest
-GetFontPathRequest
-GetGeometryRequest
-GetImageRequest
+*   FreeCursorRequest
+*   FreeGCRequest
+*   FreePixmapRequest
+*   GetAtomNameRequest
+*   GetFontPathRequest
+*   GetGeometryRequest
+*   GetImageRequest
 GetInputFocusRequest
 GetKeyboardControlRequest
 GetKeyboardMappingRequest
@@ -62,11 +62,11 @@ GrabServerRequest
 InstallColormapRequest
 InternAtomRequest
 KillClientRequest
-ListExtensionsRequest
-*    ListFontsRequest
+*   ListExtensionsRequest
+*   ListFontsRequest
 ListFontsWithInfoRequest
-ListHostsRequest
-ListInstalledColormapsRequest
+*   ListHostsRequest
+*   ListInstalledColormapsRequest
 ListPropertiesRequest
 LookupColorRequest
 *   MapSubwindowsRequest
@@ -81,9 +81,9 @@ LookupColorRequest
 *   PolyRectangleRequest
 *   PolySegmentRequest
 *   PutImageRequest
-QueryBestSizeRequest
+*   QueryBestSizeRequest
 QueryColorsRequest
-QueryExtensionRequest
+*   QueryExtensionRequest
 QueryFontRequest
 QueryKeymapRequest
 QueryPointerRequest
@@ -103,7 +103,7 @@ SetModifierMappingRequest
 SetPointerMappingRequest
 SetScreenSaverRequest
 SetSelectionOwnerRequest
-StoreColorsRequest
+*   StoreColorsRequest
 StoreNamedColorRequest
 TranslateCoordinatesRequest
 UngrabButtonRequest
@@ -111,12 +111,11 @@ UngrabKeyboardRequest
 UngrabKeyRequest
 UngrabPointerRequest
 UngrabServerRequest
-UninstallColormapRequest
+*   UninstallColormapRequest
 *   UnmapSubwindowsRequest
 *   UnmapWindowRequest
-WarpPointerRequest
+*   űWarpPointerRequest
 *   ImageText8Request
 *   ImageText16Request
 PolyText8Request
 PolyText16Request
-

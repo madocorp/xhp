@@ -13,8 +13,4 @@ class InstallColormapRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

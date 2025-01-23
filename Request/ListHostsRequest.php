@@ -14,21 +14,31 @@ class ListHostsRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['mode', Type::ENUM8, ['Disabled', 'Enabled']],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['n', Type::CARD16],
+      ['unused', Type::STRING8, 22, false]
+    ]);
+    $hosts = [];
+    $n = $response['n'];
+    for ($i = 0; $i < $n; $i++) {
+      $host = $this->receiveResponse([
+        ['family', Type::ENUM8, ['Internet', 'DECnet', 'Chaos', '-', '-', 'ServerInterpreted', 'InternetV6']],
+        ['unused', Type::BYTE],
+        ['length', Type::CARD16]
+      ], false);
+      $address = $this->receiveResponse([
+        ['address', Type::STRING8, $host['length']]
+      ], false);
+      $host['address'] = $address;
+      $hosts[] = $host;
+    }
+    $response['hosts'] = $hosts;
+    return $response;
   }
 
 }
 
-/*
-  public static function ListHosts() {
-▶
-     1     1                               Reply
-     1                                     mode
-          0     Disabled
-          1     Enabled
-     2     CARD16                          sequence number
-     4     n/4                             reply length
-     2     CARD16                          number of HOSTs in hosts
-     22                                    unused
-     n     LISTofHOST                      hosts (n always a multiple of 4)
-*/

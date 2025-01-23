@@ -25,3 +25,18 @@ class LookupColorRequest extends Request {
   }
 
 }
+
+/*
+▶
+     1     1                               Reply
+     1                                     unused
+     2     CARD16                          sequence number
+     4     0                               reply length
+     2     CARD16                          exact-red
+     2     CARD16                          exact-green
+     2     CARD16                          exact-blue
+     2     CARD16                          visual-red
+     2     CARD16                          visual-green
+     2     CARD16                          visual-blue
+     12                                    unused
+*/

@@ -13,8 +13,4 @@ class CloseFontRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

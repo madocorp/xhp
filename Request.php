@@ -38,7 +38,17 @@ class Request {
     $data2 = [];
     $length = 0;
     foreach ($data as $field) {
-      if ($field[2] == Type::VLIST) {
+      if ($field[2] == Type::BITMASK) {
+        $values = $field[1];
+        $valueList = $field[3];
+        $valueMask = 0;
+        foreach ($valueList as $i => $value) {
+          if (in_array($value, $values)) {
+            $valueMask |= pow(2, $i);
+          }
+        }
+        $data2[] = [$field[0], $valueMask, Type::CARD32];
+      } else if ($field[2] == Type::VLIST) {
         $maskpos = count($data2);
         $data2[] = ['valueMask', 0, Type::CARD32];
         $values = $field[1];
@@ -160,8 +170,8 @@ class Request {
     foreach ($specification as $field) {
       $name = $field[0];
       $type = $field[1];
-      $format = Type::$format[$type];
       if ($type == Type::STRING8) {
+        $format = Type::$format[$type];
         $stringLength = $field[2];
         $pad = true;
         if (isset($field[3]) && $field[3] == false) {
@@ -177,7 +187,12 @@ class Request {
             $length += $pad;
           }
         }
+      } else if ($type == Type::PAD4) {
+        $pad = $field[2];
+        $formatString[] = "x{$pad}";
+        $length += $pad;
       } else {
+        $format = Type::$format[$type];
         $formatString[] = "{$format}{$name}";
         $length += Type::$size[$format];
       }

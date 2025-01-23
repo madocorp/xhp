@@ -116,7 +116,7 @@ class ConnectionInitRequest extends Request {
         $depth['visualTypes'] = $visualTypes;
         $depths[] = $depth;
       }
-      $screen['depths'] = $depth;
+      $screen['depths'] = $depths;
       $screens[] = $screen;
     }
     $response['screens'] = $screens;

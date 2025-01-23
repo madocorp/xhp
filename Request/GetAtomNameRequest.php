@@ -15,7 +15,19 @@ class GetAtomNameRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['n', Type::CARD16],
+      ['unused', Type::STRING8, 22, false]
+    ]);
+    $name = $this->receiveResponse([
+      ['name', Type::STRING8, $response['n']]
+    ], false);
+    $response['name'] = $name;
+    return $response;
   }
 
 }

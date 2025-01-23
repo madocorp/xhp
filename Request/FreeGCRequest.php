@@ -13,8 +13,4 @@ class FreeGCRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

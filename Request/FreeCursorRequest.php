@@ -13,8 +13,4 @@ class FreeCursorRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

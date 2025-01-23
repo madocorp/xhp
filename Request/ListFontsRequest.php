@@ -26,9 +26,9 @@ class ListFontsRequest extends Request {
       ['n', Type::CARD16],
       ['unused', Type::STRING8, 22, false]
     ]);
-    $list = [];
-    $n = $response['n'];
+    $fonts = [];
     $total = 0;
+    $n = $response['n'];
     for ($i = 0; $i < $n; $i++) {
       $length = $this->receiveResponse([
         ['length', Type::CARD8]
@@ -36,24 +36,18 @@ class ListFontsRequest extends Request {
       $font = $this->receiveResponse([
         ['font', Type::STRING8, $length, false]
       ], false);
-      $list[] = $font;
-      $total += $length;
+      $fonts[] = $font;
+      $total += $length  + 1;
     }
-    $response['list'] = $list;
+    $pad = Connection::pad4($total);
+    if ($pad > 0) {
+      $this->receiveResponse([
+        ['pad', Type::PAD4, $pad]
+      ], false);
+    }
+    $response['fonts'] = $fonts;
     return $response;
   }
 
 }
 
-/*
-  public static function ListFonts() {
-▶
-     1     1                               Reply
-     1                                     unused
-     2     CARD16                          sequence number
-     4     (n+p)/4                         reply length
-     2     CARD16                          number of STRs in names
-     22                                    unused
-     n     LISTofSTR                       names
-     p                                     unused, p=pad(n)
-*/

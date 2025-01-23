@@ -7,8 +7,8 @@ class GetImageRequest extends Request {
   public function __construct($format, $drawable, $x, $y, $width, $height, $planeMask) {
     $this->sendRequest([
       ['opcode', 73, Type::BYTE],
-      ['format', $format, Type::ENUM8, ['XYPixmap', 'ZPixmap']],
-      ['requestLength', 2, Type::CARD16],
+      ['format', $format, Type::ENUM8, [0, 'XYPixmap', 'ZPixmap']],
+      ['requestLength', 5, Type::CARD16],
       ['drawable', $drawable, Type::DRAWABLE],
       ['x', $x, Type::INT16],
       ['y', $y, Type::INT16],
@@ -20,7 +20,19 @@ class GetImageRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['depth', Type::CARD8],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['visual', Type::VISUALID],
+      ['unused', Type::STRING8, 20, false]
+    ]);
+    $data = $this->receiveResponse([
+      ['data', Type::STRING8, $response['replyLength'] << 2]
+    ], false);
+    $response['data'] = $data;
+    return $response;
   }
 
 }

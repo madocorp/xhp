@@ -15,23 +15,19 @@ class GetGeometryRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['depth', Type::CARD8],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['window', Type::WINDOW],
+      ['x', Type::INT16],
+      ['y', Type::INT16],
+      ['width', Type::CARD16],
+      ['height', Type::CARD16],
+      ['borderWidth', Type::CARD16],
+      ['unused', Type::STRING8, 10, false]
+    ]);
   }
 
 }
-
-/*
-  public static function GetGeometry() {
-▶
-     1     1                               Reply
-     1     CARD8                           depth
-     2     CARD16                          sequence number
-     4     0                               reply length
-     4     WINDOW                          root
-     2     INT16                           x
-     2     INT16                           y
-     2     CARD16                          width
-     2     CARD16                          height
-     2     CARD16                          border-width
-     10                                    unused
-*/
