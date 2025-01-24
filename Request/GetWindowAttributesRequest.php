@@ -15,7 +15,7 @@ class GetWindowAttributesRequest extends Request {
   }
 
   protected function processResponse() {
-    $response = $this->receiveResponse([
+    return $this->receiveResponse([
       ['reply', Type::BYTE],
       ['backingStore', Type::ENUM8, ['NotUseful', 'WhenMapped', 'Always']],
       ['sequenceNumber', Type::CARD16],
@@ -36,7 +36,6 @@ class GetWindowAttributesRequest extends Request {
       ['doNotPropagateMask', Type::CARD16],
       ['unused', Type::CARD16]
     ]);
-    return $response;
   }
 
 }

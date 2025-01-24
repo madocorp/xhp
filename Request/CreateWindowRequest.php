@@ -34,7 +34,7 @@ class CreateWindowRequest extends Request {
         ['backingPixel', Type::CARD32],
         ['overrideRedirect', Type::BYTE],
         ['saveUnder', Type::BYTE],
-        ['eventMask', Type::CARD32],
+        ['eventMask', Type::BITMASK32, ['KeyPress', 'KeyRelease', 'ButtonPress', 'ButtonRelease', 'EnterWindow', 'LeaveWindow', 'PointerMotion', 'PointerMotionHint', 'Button1Motion', 'Button2Motion', 'Button3Motion', 'Button4Motion', 'Button5Motion', 'ButtonMotion', 'KeymapState', 'Exposure', 'VisibilityChange', 'StructureNotify', 'ResizeRedirect', 'SubstructureNotify', 'SubstructureRedirect', 'FocusChange', 'PropertyChange', 'ColormapChange', 'OwnerGrabButton']],
         ['doNotPropagateMask', Type::CARD32],
         ['colormap', Type::CARD32],
         ['cursor', Type::CARD32]

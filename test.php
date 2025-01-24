@@ -2,7 +2,7 @@
 
 namespace X11;
 
-define('X11_DEBUG', true);
+define('X11\DEBUG', true);
 require_once 'X11.php';
 
 function eventHandler($event) {
@@ -42,18 +42,18 @@ $visual = $screen['rootVisual'];
 new \X11\CreateWindowRequest(
   $depth, $wid1, $root, 0,
   0, 640, 480, $borderWidth,
-  'InputOutput', $visual, ['backgroundPixel' => 0x000055, 'eventMask' => 0x8003]
+  'InputOutput', $visual, ['backgroundPixel' => 0x000055, 'eventMask' => ['KeyPress', 'KeyRelease', 'Exposure']]
 );
 new \X11\ChangePropertyRequest('Replace', $wid1, Atom::WM_NAME, Atom::STRING, 8, 'Hello World 1!');
 new \X11\MapWindowRequest($wid1);
 new \X11\GetWindowAttributesRequest($wid1);
+new \X11\GetPropertyRequest(false, $wid1, Atom::WM_NAME, Atom::STRING, 0, 100);
 
-zzz();
 $wid2 = Connection::generateId();
 new \X11\CreateWindowRequest(
   $depth, $wid2, $root, 0,
   0, 200, 200, $borderWidth,
-  'InputOutput', $visual, ['backgroundPixel' => 0x550000, 'eventMask' => 0x8003]
+  'InputOutput', $visual, ['backgroundPixel' => 0x550000, 'eventMask' => ['KeyPress', 'KeyRelease', 'Exposure']]
 );
 new \X11\ChangePropertyRequest('Replace', $wid2, Atom::WM_NAME, Atom::STRING, 8, 'Hello World 2!');
 new \X11\MapWindowRequest($wid2);
@@ -215,6 +215,8 @@ new \X11\QueryExtensionRequest('BIG-REQUESTS');
 
 zzz();
 new \X11\ListPropertiesRequest($wid1);
+$res = Connection::getLastResponse();
+new \X11\RotatePropertiesRequest($wid1, 2, [$res['atoms'][0], $res['atoms'][1]]);
 
 zzz();
 new \X11\GetAtomNameRequest(Atom::CURSOR);
@@ -242,6 +244,22 @@ new \X11\GetGeometryRequest($root);
 
 zzz();
 new \X11\WarpPointerRequest(0, $wid2, 100, 100, 0, 0, 0, 0);
+
+zzz();
+new \X11\GrabPointerRequest(true, $wid2, ['ButtonPress'], 'Asynchronous', 'Asynchronous', $wid2, $crid2, 0);
+new \X11\UngrabPointerRequest(0);
+
+zzz();
+
+zzz();
+new \X11\AllowEventsRequest('AsyncPointer', time());
+
+
+zzz();
+new \X11\SetScreenSaverRequest(0, 400, 'No', 'No');
+
+zzz();
+new \X11\GetScreenSaverRequest();
 
 zzz();
 new \X11\ForceScreenSaverRequest('Reset');
@@ -278,6 +296,9 @@ if ($alternativeVisual !== false) {
 
   zzz();
   new \X11\UninstallColormapRequest($cmid1);
+
+  zzz();
+  new \X11\LookupColorRequest($cmid1, 'red');
 
   zzz();
   new \X11\FreeColormapRequest($cmid1);

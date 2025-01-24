@@ -13,8 +13,4 @@ class UngrabPointerRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

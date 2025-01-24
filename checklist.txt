@@ -2,7 +2,7 @@ AllocColorCellsRequest
 AllocColorPlanesRequest
 AllocColorRequest
 AllocNamedColorRequest
-AllowEventsRequest
+*   AllowEventsRequest
 *   BellRequest
 ChangeActivePointerGrabRequest
 *   ChangeGCRequest
@@ -50,14 +50,14 @@ GetModifierMappingRequest
 GetMotionEventsRequest
 GetPointerControlRequest
 GetPointerMappingRequest
-GetPropertyRequest
-GetScreenSaverRequest
+*   GetPropertyRequest
+*   GetScreenSaverRequest
 GetSelectionOwnerRequest
 *   GetWindowAttributesRequest
 GrabButtonRequest
 GrabKeyboardRequest
 GrabKeyRequest
-GrabPointerRequest
+*   GrabPointerRequest
 GrabServerRequest
 InstallColormapRequest
 InternAtomRequest
@@ -68,7 +68,7 @@ ListFontsWithInfoRequest
 *   ListHostsRequest
 *   ListInstalledColormapsRequest
 *   ListPropertiesRequest
-LookupColorRequest
+*   LookupColorRequest
 *   MapSubwindowsRequest
 *   MapWindowRequest
 *   NoOperationRequest
@@ -91,7 +91,7 @@ LookupColorRequest
 *   QueryTreeRequest
 *   RecolorCursorRequest
 *   ReparentWindowRequest
-RotatePropertiesRequest
+*   RotatePropertiesRequest
 SendEventRequest
 SetAccessControlRequest
 SetClipRectanglesRequest
@@ -101,7 +101,7 @@ SetFontPathRequest
 SetInputFocusRequest
 SetModifierMappingRequest
 SetPointerMappingRequest
-SetScreenSaverRequest
+*   SetScreenSaverRequest
 SetSelectionOwnerRequest
 *   StoreColorsRequest
 StoreNamedColorRequest
@@ -109,12 +109,12 @@ TranslateCoordinatesRequest
 UngrabButtonRequest
 UngrabKeyboardRequest
 UngrabKeyRequest
-UngrabPointerRequest
+*   UngrabPointerRequest
 UngrabServerRequest
 *   UninstallColormapRequest
 *   UnmapSubwindowsRequest
 *   UnmapWindowRequest
-*   űWarpPointerRequest
+*   WarpPointerRequest
 *   ImageText8Request
 *   ImageText16Request
 PolyText8Request

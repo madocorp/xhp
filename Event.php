@@ -401,7 +401,7 @@ class Event {
     $event = unpack($format, $bytes);
     unset($event['unused']);
     $event['name'] = $name;
-    if (X11_DEBUG) {
+    if (DEBUG) {
       self::debug($event, $name);
     }
     return $event;

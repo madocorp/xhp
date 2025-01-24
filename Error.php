@@ -62,7 +62,7 @@ class Error {
     }
     $code = $type[2];
     $name = self::$codes[$code];
-    if (X11_DEBUG) {
+    if (DEBUG) {
       self::debug($bytes, $name);
     }
     if (self::$errorHandler !== false) {
@@ -70,7 +70,7 @@ class Error {
       $error['name'] = $name;
       call_user_func(self::$errorHandler, $error);
     } else {
-      throw new \Exception("Error: {$name}");
+      throw new Exception("Bad {$name}");
     }
   }
 

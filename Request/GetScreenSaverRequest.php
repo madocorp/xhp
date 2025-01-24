@@ -14,25 +14,17 @@ class GetScreenSaverRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['timeout', Type::CARD16],
+      ['interval', Type::CARD16],
+      ['preferBlanking', Type::ENUM8, ['No', 'Yes']],
+      ['allowExposures', Type::ENUM8, ['No', 'Yes']],
+      ['unused', Type::STRING8, 18, false]
+    ]);
   }
 
 }
-
-/*
-  public static function GetScreenSaver() {
-▶
-     1     1                               Reply
-     1                                     unused
-     2     CARD16                          sequence number
-     4     0                               reply length
-     2     CARD16                          timeout
-     2     CARD16                          interval
-     1                                     prefer-blanking
-          0     No
-          1     Yes
-     1                                     allow-exposures
-          0     No
-          1     Yes
-     18                                    unused
-*/

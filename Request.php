@@ -15,6 +15,9 @@ class Request {
         echo str_pad('[' . strlen($field[1]) . ']', 26, ' ', STR_PAD_LEFT);
       } else if ($field[2] == Type::PAD4) {
         echo str_pad('[' . $field[1] . ']', 66, ' ', STR_PAD_LEFT);
+      } else if (in_array($field[2], [Type::BITMASK8, Type::BITMASK16, Type::BITMASK32])) {
+        echo str_pad(implode(',', $field[1]), 40, ' ', STR_PAD_LEFT);
+        echo str_pad(' [' . Type::$size[Type::$format[$field[2]]] . ']', 26, ' ', STR_PAD_LEFT);
       } else {
         echo str_pad($field[1], 40, ' ', STR_PAD_LEFT);
         if (is_int($field[1])) {
@@ -38,17 +41,7 @@ class Request {
     $data2 = [];
     $length = 0;
     foreach ($data as $field) {
-      if ($field[2] == Type::BITMASK) {
-        $values = $field[1];
-        $valueList = $field[3];
-        $valueMask = 0;
-        foreach ($valueList as $i => $value) {
-          if (in_array($value, $values)) {
-            $valueMask |= pow(2, $i);
-          }
-        }
-        $data2[] = [$field[0], $valueMask, Type::CARD32];
-      } else if ($field[2] == Type::VLIST) {
+      if ($field[2] == Type::VLIST) {
         $maskpos = count($data2);
         $data2[] = ['valueMask', 0, Type::CARD32];
         $values = $field[1];
@@ -60,7 +53,15 @@ class Request {
             continue;
           }
           $valueMask |= pow(2, $i);
-          array_splice($map, 1, 0, $values[$name]);
+          $map2 = [];
+          foreach ($map as $i => $item) {
+            $map2[] = $item;
+            if ($i == 0) {
+              $map2[] = $values[$name];
+            }
+          }
+          $map = $map2;
+//          array_splice($map, 1, 0, $values[$name]);
           $data2[] = $map;
           $fieldLength = Type::$size[Type::$format[$map[2]]];
           if ($fieldLength < 4) {
@@ -113,7 +114,24 @@ class Request {
           $values = array_merge($values, array_fill(0, $value, 0));
         }
       } else {
-        if (in_array($type, [Type::ENUM8, Type::ENUM16, Type::ENUM32])) {
+        if (in_array($type, [Type::BITMASK8, Type::BITMASK16, Type::BITMASK32])) {
+          $bits = $field[1];
+          $valueList = $field[3];
+          $valueMask = 0;
+          foreach ($valueList as $i => $value) {
+            if (in_array($value, $bits)) {
+              $valueMask |= pow(2, $i);
+            }
+          }
+          $value = $valueMask;
+          if ($field[2] == Type::BITMASK8) {
+            $type = Type::CARD8;
+          } else if ($field[2] == Type::BITMASK16) {
+            $type = Type::CARD16;
+          } else {
+            $type = Type::CARD32;
+          }
+        } else if (in_array($type, [Type::ENUM8, Type::ENUM16, Type::ENUM32])) {
           $enum = $field[3];
           $value = array_search($value, $enum);
         }
@@ -123,7 +141,7 @@ class Request {
       }
     }
     $request = pack($formatString, ...$values);
-    if (X11_DEBUG) {
+    if (DEBUG) {
       $this->debugRequest($data, $request);
     }
     Connection::write($request);
@@ -215,7 +233,7 @@ class Request {
       $response[$name] = ($response[$name] > 0);
     }
     unset($response['unused']);
-    if (X11_DEBUG) {
+    if (DEBUG) {
       $this->debugResponse($response);
     }
     if (count($response) == 1) {

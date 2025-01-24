@@ -20,7 +20,9 @@ class Type {
   const VLIST = 14;
   const FLIST = 15;
   const EVENT = 16;
-  const BITMASK = 17;
+  const BITMASK8 = 17;
+  const BITMASK16 = 18;
+  const BITMASK32 = 19;
 
   const WINDOW = self::CARD32;
   const PIXMAP = self::CARD32;
@@ -47,7 +49,9 @@ class Type {
     self::ENUM16 => 'S',
     self::ENUM32 => 'L',
     self::STRING8 => 'a*',
-    self::BITMASK => 'L'
+    self::BITMASK8 => 'C',
+    self::BITMASK16 => 'S',
+    self::BITMASK32 => 'L'
   ];
 
   public static $size = [

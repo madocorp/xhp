@@ -11,11 +11,6 @@ class AllowEventsRequest extends Request {
       ['requestLength', 2, Type::CARD16],
       ['timestamp', $timestamp, Type::CARD32]
     ]);
-    Connection::setResponse($this->processResponse());
-  }
-
-  protected function processResponse() {
-    return false;
   }
 
 }

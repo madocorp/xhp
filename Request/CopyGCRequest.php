@@ -11,7 +11,7 @@ class CopyGCRequest extends Request {
       ['requestLength', 4, Type::CARD16],
       ['srcGc', $srcGc, Type::GCONTEXT],
       ['dstGc', $dstGc, Type::GCONTEXT],
-      ['valueMask', $valueMask, Type::BITMASK, [
+      ['valueMask', $valueMask, Type::BITMASK32, [
         'function', 'planeMask', 'foreground', 'background',
         'lineWidth', 'lineStyle', 'capStyle', 'joinStyle',
         'fillStyle', 'fillRule', 'tile', 'stipple',

@@ -37,16 +37,3 @@ class GetImageRequest extends Request {
 
 }
 
-/*
-  public static function GetImage() {
-▶
-     1     1                               Reply
-     1     CARD8                           depth
-     2     CARD16                          sequence number
-     4     (n+p)/4                         reply length
-     4     VISUALID                        visual
-          0     None
-     20                                    unused
-     n     LISTofBYTE                      data
-     p                                     unused, p=pad(n)
-*/

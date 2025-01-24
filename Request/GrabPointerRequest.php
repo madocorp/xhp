@@ -5,42 +5,33 @@ namespace X11;
 class GrabPointerRequest extends Request {
 
   public function __construct(
-    $grabWindow, $eventMask, $pointerMode, $keyboardMode,
-    $confineTo, $cursor, $timestamp
+    $ownerEvents, $grabWindow, $eventMask, $pointerMode,
+    $keyboardMode, $confineTo, $cursor, $timestamp
   ) {
     $this->sendRequest([
       ['opcode', 26, Type::BYTE],
-      ['ownerEvents', 0, Type::BOOL],
+      ['ownerEvents', $ownerEvents, Type::BOOL],
       ['requestLength', 6, Type::CARD16],
       ['grabWindow', $grabWindow, Type::WINDOW],
-      ['eventMask', $eventMask, Type::CARD16],
+      ['eventMask', $eventMask, Type::BITMASK16, [false, false, 'ButtonPress', 'ButtonRelease', 'EnterWindow', 'LeaveWindow', 'PointerMotion', 'PointerMotionHint', 'Button1Motion', 'Button2Motion', 'Button3Motion', 'Button4Motion', 'Button5Motion', 'ButtonMotion', 'KeymapState']],
       ['pointerMode', $pointerMode, Type::ENUM8, ['Synchronous', 'Asynchronous']],
       ['keyboardMode', $keyboardMode, Type::ENUM8, ['Synchronous', 'Asynchronous']],
       ['confineTo', $confineTo, Type::WINDOW],
       ['cursor', $cursor, Type::CURSOR],
       ['timestamp', $timestamp, Type::CARD32]
     ]);
-    return Response::GrabKeyboard();
+    Connection::setResponse($this->processResponse());
   }
 
-
   protected function processResponse() {
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['status', Type::ENUM8, ['Success', 'AlreadyGrabbed', 'InvalidTime', 'NotViewable', 'Frozen']],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['unused', Type::STRING8, 24, false]
+    ]);
     return false;
   }
 
 }
-
-/*
-  public static function GrabPointer() {
-▶
-     1     1                               Reply
-     1                                     status
-          0     Success
-          1     AlreadyGrabbed
-          2     InvalidTime
-          3     NotViewable
-          4     Frozen
-     2     CARD16                          sequence number
-     4     0                               reply length
-     24                                    unused
-*/

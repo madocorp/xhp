@@ -11,16 +11,10 @@ class SetScreenSaverRequest extends Request {
       ['requestLength', 3, Type::CARD16],
       ['timeout', $timeout, Type::INT16],
       ['interval', $interval, Type::INT16],
-      ['preferBlanking', $prefereBlanking, Type::ENUM8, ['No', 'Yes', 'Default']],
+      ['preferBlanking', $preferBlanking, Type::ENUM8, ['No', 'Yes', 'Default']],
       ['allowExposures', $allowExposures, Type::ENUM8, ['No', 'Yes', 'Default']],
       ['unused', 0, Type::CARD16]
     ]);
-  }
-
-
-
-  protected function processResponse() {
-    return false;
   }
 
 }

@@ -19,7 +19,21 @@ class GetPropertyRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['format', Type::CARD8],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['type', Type::ATOM],
+      ['bytesAfter', Type::CARD32],
+      ['lengthInUnits', Type::CARD32],
+      ['unused', Type::STRING8, 12, false]
+    ]);
+    $value = $this->receiveResponse([
+      ['value', Type::STRING8, $response['replyLength'] << 2],
+    ], false);
+    $response['value'] = $value;
+    return $response;
   }
 
 }

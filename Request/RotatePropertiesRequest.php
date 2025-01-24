@@ -9,7 +9,7 @@ class RotatePropertiesRequest extends Request {
     $data = [
       ['opcode', 114, Type::BYTE],
       ['unused', 0, Type::BYTE],
-      ['requestLength', 4 + $n, Type::CARD16],
+      ['requestLength', 3 + $n, Type::CARD16],
       ['window', $window, Type::WINDOW],
       ['numberOfProperties', $n, Type::CARD16],
       ['delta', $delta, Type::INT16],
@@ -18,10 +18,6 @@ class RotatePropertiesRequest extends Request {
       $data[] = ['property', $property, Type::ATOM];
     }
     $this->sendRequest($data);
-  }
-
-  protected function processResponse() {
-    return false;
   }
 
 }
