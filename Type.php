@@ -36,6 +36,9 @@ class Type {
   const VISUALID = self::CARD32;
   const TIMESTAMP = self::CARD32;
 
+  const KEYSYM = self::CARD32;
+  const KEYCODE = self::CARD8;
+
   public static $format = [
     self::BYTE => 'C',
     self::BOOL => 'C',

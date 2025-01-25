@@ -15,25 +15,19 @@ class GetKeyboardControlRequest extends Request {
 
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['globalAutoRepeat', Type::ENUM8, ['Off', 'On']],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['ledMask', Type::CARD32],
+      ['keyClickPercent', Type::CARD8],
+      ['bellPercent', Type::CARD8],
+      ['bellPitch', Type::CARD16],
+      ['bellDuration', Type::CARD16],
+      ['unused', Type::CARD16],
+      ['autoRepeats', Type::STRING8, 32, false]
+    ]);
   }
 
 }
-
-/*
-  public static function GetKeyboardControl() {
-▶
-     1     1                               Reply
-     1                                     global-auto-repeat
-          0     Off
-          1     On
-     2     CARD16                          sequence number
-     4     5                               reply length
-     4     CARD32                          led-mask
-     1     CARD8                           key-click-percent
-     1     CARD8                           bell-percent
-     2     CARD16                          bell-pitch
-     2     CARD16                          bell-duration
-     2                                     unused
-     32     LISTofCARD8                    auto-repeats
-*/

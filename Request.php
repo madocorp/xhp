@@ -80,7 +80,14 @@ class Request {
         foreach ($foos as $foo) {
           foreach ($fooMap as $fooField) {
             $fooFieldWithValue = $fooField;
-            array_splice($fooFieldWithValue, 1, 0, $foo[$fooField[0]]);
+//            array_splice($fooFieldWithValue, 1, 0, $foo[$fooField[0]]);
+            $fooFieldWithValue = [];
+            foreach ($fooField as $i => $item) {
+              $fooFieldWithValue[] = $item;
+              if ($i == 0) {
+                $fooFieldWithValue[] = $foo[$fooField[0]];
+              }
+            }
             $data2[] = $fooFieldWithValue;
           }
         }
@@ -97,6 +104,7 @@ class Request {
         $data2[] = $field;
       }
     }
+
     $data2[2][1] += $length;
     return $data2;
   }

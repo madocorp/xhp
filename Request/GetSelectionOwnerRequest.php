@@ -15,19 +15,15 @@ class GetSelectionOwnerRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['owner', Type::WINDOW],
+      ['unused', Type::STRING8, 20, false],
+    ]);
   }
 
 }
 
-/*
-  public static function GetSelectionOwner() {
-▶
-     1     1                               Reply
-     1                                     unused
-     2     CARD16                          sequence number
-     4     0                               reply length
-     4     WINDOW                          owner
-          0     None
-     20                                    unused
-*/

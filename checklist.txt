@@ -1,15 +1,15 @@
-AllocColorCellsRequest
-AllocColorPlanesRequest
-AllocColorRequest
-AllocNamedColorRequest
+*   AllocColorCellsRequest
+*   AllocColorPlanesRequest
+*   AllocColorRequest
+*   AllocNamedColorRequest
 *   AllowEventsRequest
 *   BellRequest
-ChangeActivePointerGrabRequest
+*   ChangeActivePointerGrabRequest
 *   ChangeGCRequest
 *   ChangeHostsRequest
-ChangeKeyboardControlRequest
-ChangeKeyboardMappingRequest
-ChangePointerControlRequest
+*   ChangeKeyboardControlRequest
+*   ChangeKeyboardMappingRequest
+*   ChangePointerControlRequest
 *   ChangePropertyRequest
 *   ChangeSaveSetRequest
 *   ChangeWindowAttributesRequest
@@ -18,7 +18,7 @@ ChangePointerControlRequest
 *   CloseFontRequest
 *   ConfigureWindowRequest
 *   ConnectionInitRequest
-ConvertSelectionRequest
+*   ConvertSelectionRequest
 *   CopyAreaRequest
 CopyColormapAndFreeRequest
 *   CopyGCRequest
@@ -35,7 +35,7 @@ CopyPlaneRequest
 *   FillPolyRequest
 *   ForceScreenSaverRequest
 *   FreeColormapRequest
-FreeColorsRequest
+*   FreeColorsRequest
 *   FreeCursorRequest
 *   FreeGCRequest
 *   FreePixmapRequest
@@ -44,23 +44,23 @@ FreeColorsRequest
 *   GetGeometryRequest
 *   GetImageRequest
 GetInputFocusRequest
-GetKeyboardControlRequest
-GetKeyboardMappingRequest
+*   GetKeyboardControlRequest
+*   GetKeyboardMappingRequest
 GetModifierMappingRequest
 GetMotionEventsRequest
-GetPointerControlRequest
+*   GetPointerControlRequest
 GetPointerMappingRequest
 *   GetPropertyRequest
 *   GetScreenSaverRequest
-GetSelectionOwnerRequest
+*   GetSelectionOwnerRequest
 *   GetWindowAttributesRequest
 GrabButtonRequest
 GrabKeyboardRequest
 GrabKeyRequest
 *   GrabPointerRequest
 GrabServerRequest
-InstallColormapRequest
-InternAtomRequest
+*   InstallColormapRequest
+*   InternAtomRequest
 KillClientRequest
 *   ListExtensionsRequest
 *   ListFontsRequest

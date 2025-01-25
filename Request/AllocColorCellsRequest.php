@@ -17,21 +17,30 @@ class AllocColorCellsRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['n', Type::CARD16],
+      ['m', Type::CARD16],
+      ['unused', Type::STRING8, 20, false]
+    ]);
+    $pixels = [];
+    for ($i = 0; $i < $response['n']; $i++) {
+      $pixels[] = $this->receiveResponse([
+        ['data', Type::CARD32]
+      ], false);
+    }
+    $response['pixels'] = $pixels;
+    $masks = [];
+    for ($i = 0; $i < $response['m']; $i++) {
+      $masks[] = $this->receiveResponse([
+        ['data', Type::CARD32]
+      ], false);
+    }
+    $response['masks'] = $masks;
+    return $response;
   }
 
 }
-
-/*
-  public static function AllocColorCells() {
-▶
-     1     1                               Reply
-     1                                     unused
-     2     CARD16                          sequence number
-     4     n+m                             reply length
-     2     n                               number of CARD32s in pixels
-     2     m                               number of CARD32s in masks
-     20                                    unused
-     4n     LISTofCARD32                   pixels
-     4m     LISTofCARD32                   masks
-*/

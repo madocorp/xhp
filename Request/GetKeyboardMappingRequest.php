@@ -17,19 +17,24 @@ class GetKeyboardMappingRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['n', Type::CARD8],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['autoRepeats', Type::STRING8, 24, false]
+    ]);
+    $n = $response['n'];
+    $m = $response['replyLength'] / $n;
+    $keysyms = [];
+    for ($i = 0; $i < $n; $i++) {
+      $keycode = [];
+      for ($j = 0; $j < $m; $j++) {
+        $keycode[] = $this->receiveResponse([['keysym', Type::CARD32]], false);
+      }
+      $keysyms[] = $keycode;
+    }
+    return $response;
   }
 
 }
-
-/*
-  public static function GetKeyboardMapping() {
-▶
-     1     1                               Reply
-     1     n                               keysyms-per-keycode
-     2     CARD16                          sequence number
-     4     nm                              reply length (m = count field
-                                           from the request)
-     24                                    unused
-     4nm     LISTofKEYSYM                  keysyms
-*/

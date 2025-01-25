@@ -19,22 +19,19 @@ class AllocColorRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['red', Type::CARD16],
+      ['green', Type::CARD16],
+      ['blue', Type::CARD16],
+      ['unused', Type::CARD16],
+      ['pixel', Type::CARD32],
+      ['unused', Type::STRING8, 12, false]
+    ]);
   }
 
 }
 
-/*
-  public static function AllocColor() {
-▶
-     1     1                               Reply
-     1                                     unused
-     2     CARD16                          sequence number
-     4     0                               reply length
-     2     CARD16                          red
-     2     CARD16                          green
-     2     CARD16                          blue
-     2                                     unused
-     4     CARD32                          pixel
-     12                                    unused
-*/

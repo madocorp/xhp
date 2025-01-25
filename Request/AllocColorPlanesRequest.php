@@ -19,23 +19,26 @@ class AllocColorPlanesRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['n', Type::CARD16],
+      ['unused', Type::CARD16],
+      ['redMask', Type::CARD32],
+      ['greenMask', Type::CARD32],
+      ['blueMask', Type::CARD32],
+      ['unused', Type::STRING8, 8, false]
+    ]);
+    $pixels = [];
+    for ($i = 0; $i < $response['n']; $i++) {
+      $pixels[] = $this->receiveResponse([
+        ['data', Type::CARD32]
+      ], false);
+    }
+    $response['pixels'] = $pixels;
+    return $response;
   }
 
 }
-
-/*
-  public static function AllocColorPlanes() {
-▶
-     1     1                               Reply
-     1                                     unused
-     2     CARD16                          sequence number
-     4     n                               reply length
-     2     n                               number of CARD32s in pixels
-     2                                     unused
-     4     CARD32                          red-mask
-     4     CARD32                          green-mask
-     4     CARD32                          blue-mask
-     8                                     unused
-     4n     LISTofCARD32                   pixels
-*/

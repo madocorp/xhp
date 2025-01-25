@@ -17,8 +17,4 @@ class ConvertSelectionRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

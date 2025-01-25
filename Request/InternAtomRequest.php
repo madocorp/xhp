@@ -4,34 +4,27 @@ namespace X11;
 
 class InternAtomRequest extends Request {
 
-  public function __construct($name) {
-    $length = strlen($name);
+  public function __construct($ifExists, $name) {
     $this->sendRequest([
       ['opcode', 16, Type::BYTE],
-      ['onlyIfExists', 0, Type::BOOL],
+      ['onlyIfExists', $ifExists, Type::BOOL],
       ['requestLength', 2, Type::CARD16],
-      ['n', $length, Type::CARD16],
+      ['n', strlen($name), Type::CARD16],
       ['unused', 0, Type::CARD16],
-      ['name', $name, Type::STRING8],
-      ['pad', pad4($length), Type::PAD4]
+      ['name', $name, Type::STRING8]
     ]);
-    return Respnose::InternAtom();
+    Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['atom', Type::ATOM],
+      ['unused', Type::STRING8, 20, false]
+    ]);
   }
 
 }
-
-/*
-  public static function InternAtom() {
-▶
-     1     1                               Reply
-     1                                     unused
-     2     CARD16                          sequence number
-     4     0                               reply length
-     4     ATOM                            atom
-           0     None
-     20                                    unused
-*/

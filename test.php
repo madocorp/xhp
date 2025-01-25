@@ -6,7 +6,7 @@ define('X11\DEBUG', true);
 require_once 'X11.php';
 
 function eventHandler($event) {
-  if ($event['name'] == 'KeyPress') {
+  if ($event && $event['name'] == 'KeyPress') {
     if ($event['detail'] == 9) { // escape
       Event::end();
     }
@@ -14,7 +14,7 @@ function eventHandler($event) {
 }
 
 function zzz() {
-  usleep(50000);
+  usleep(5000);
 }
 
 Event::setHandler('\X11\eventHandler');
@@ -153,7 +153,6 @@ new \X11\ClearAreaRequest(false, $wid1, 200, 200, 200, 200);
 
 zzz();
 new \X11\ListFontsRequest(10, '*fixed*');
-
 $fid1 = Connection::generateId();
 new \X11\OpenFontRequest($fid1, '-misc-fixed-medium-r-semicondensed--0-0-75-75-c-0-iso8859-2');
 $fid2 = Connection::generateId();
@@ -184,10 +183,10 @@ new \X11\PolyFillRectangleRequest($pmid2, $gcid2, [['x' => 8, 'y' => 8, 'width' 
 $crid1 = Connection::generateId();
 new \X11\CreateCursorRequest($crid1, $pmid1, $pmid2, 0xffff, 0xffff, 0x0, 0xffff, 0x0, 0x0, 16, 16);
 new \X11\ChangeWindowAttributesRequest($wid1, ['cursor' => $crid1]);
-
 $crid2 = Connection::generateId();
 new \X11\CreateGlyphCursorRequest($crid2, $fid3, $fid3, 122, 122, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0);
 new \X11\ChangeWindowAttributesRequest($wid2, ['cursor' => $crid2]);
+
 zzz();
 $pmid3 = Connection::generateId();
 new \X11\CreatePixmapRequest(24, $pmid3, $root, 100, 100);
@@ -247,6 +246,8 @@ new \X11\WarpPointerRequest(0, $wid2, 100, 100, 0, 0, 0, 0);
 
 zzz();
 new \X11\GrabPointerRequest(true, $wid2, ['ButtonPress'], 'Asynchronous', 'Asynchronous', $wid2, $crid2, 0);
+
+new \X11\ChangeActivePointerGrabRequest($crid2, 0, ['ButtonPress']);
 new \X11\UngrabPointerRequest(0);
 
 zzz();
@@ -301,11 +302,63 @@ if ($alternativeVisual !== false) {
   new \X11\LookupColorRequest($cmid1, 'red');
 
   zzz();
-  new \X11\FreeColormapRequest($cmid1);
+  $cmid2 = Connection::generateId();
+  new \X11\CreateColormapRequest('None', $cmid2, $wid2, $alternativeVisual);
+
+  zzz();
+  new \X11\AllocColorRequest($cmid2, 0xff, 0xff, 0x0);
+
+  zzz();
+  new \X11\AllocNamedColorRequest($cmid2, 'blue');
+  $response = Connection::getLastResponse();
+  $pixel = $response['pixel'];
+
+  zzz();
+  new \X11\AllocColorCellsRequest(false, $cmid2, 2, 1);
+
+  zzz();
+  new \X11\AllocColorPlanesRequest(false, $cmid2, 2, 0, 0, 0);
+
+  zzz();
+  new \X11\FreeColorsRequest($cmid2, 0, [['pixel' => $pixel]]);
+
+  zzz();
+  new \X11\FreeColormapRequest($cmid2);
 }
 
 zzz();
 new \X11\DeletePropertyRequest($wid1, Atom::WM_NAME);
+
+zzz();
+new \X11\GetKeyboardControlRequest();
+new \X11\ChangeKeyboardControlRequest(['led' => 2, 'ledMode' => 'On']);
+
+zzz();
+new \X11\ChangeKeyboardControlRequest(['led' => 2, 'ledMode' => 'Off']);
+
+zzz();
+new \X11\ChangeKeyboardMappingRequest(38, 4, [[98, 66, 98, 66]]);
+
+zzz();
+new \X11\GetKeyboardMappingRequest(38, 1);
+
+zzz();
+new \X11\ChangeKeyboardMappingRequest(38, 4, [[97, 65, 97, 65]]);
+
+zzz();
+new \X11\GetPointerControlRequest();
+$pointerControl = Connection::getLastResponse();
+new \X11\ChangePointerControlRequest(2, 3, 30, true, true);
+new \X11\GetPointerControlRequest();
+new \X11\ChangePointerControlRequest($pointerControl['accelerationNumerator'], $pointerControl['accelerationDenominator'], $pointerControl['thresold'], true, true);
+
+zzz();
+new \X11\InternAtomRequest(true, 'CLIPBOARD');
+$clipboard = Connection::getLastResponse();
+new \X11\InternAtomRequest(true, 'XSEL_DATA');
+$xseldata = Connection::getLastResponse();
+new \X11\GetSelectionOwnerRequest($clipboard['atom']);
+new \X11\ConvertSelectionRequest($root, $clipboard['atom'], $clipboard['atom'], $clipboard['atom'], 0);
 
 zzz();
 new \X11\NoOperationRequest(16);
