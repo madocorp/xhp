@@ -14,23 +14,14 @@ class GetInputFocusRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['revertTo', Type::ENUM8, ['None', 'PointerRoor', 'Parent']],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['focus', Type::WINDOW],
+      ['unused', Type::STRING8, 20, false]
+    ]);
   }
 
 }
-
-/*
-  public static function GetInputFocus() {
-▶
-     1     1                               Reply
-     1                                     revert-to
-          0     None
-          1     PointerRoot
-          2     Parent
-     2     CARD16                          sequence number
-     4     0                               reply length
-     4     WINDOW                          focus
-          0     None
-          1     PointerRoot
-     20                                    unused
-*/

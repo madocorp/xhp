@@ -20,9 +20,9 @@
 *   ConnectionInitRequest
 *   ConvertSelectionRequest
 *   CopyAreaRequest
-CopyColormapAndFreeRequest
+*   CopyColormapAndFreeRequest
 *   CopyGCRequest
-CopyPlaneRequest
+*   CopyPlaneRequest
 *   CreateColormapRequest
 *   CreateCursorRequest
 *   CreateGCRequest
@@ -43,28 +43,28 @@ CopyPlaneRequest
 *   GetFontPathRequest
 *   GetGeometryRequest
 *   GetImageRequest
-GetInputFocusRequest
+*   GetInputFocusRequest
 *   GetKeyboardControlRequest
 *   GetKeyboardMappingRequest
-GetModifierMappingRequest
-GetMotionEventsRequest
+*   GetModifierMappingRequest
+*   GetMotionEventsRequest
 *   GetPointerControlRequest
-GetPointerMappingRequest
+*   GetPointerMappingRequest
 *   GetPropertyRequest
 *   GetScreenSaverRequest
 *   GetSelectionOwnerRequest
 *   GetWindowAttributesRequest
-GrabButtonRequest
-GrabKeyboardRequest
-GrabKeyRequest
+*   GrabButtonRequest
+*   GrabKeyboardRequest
+*   GrabKeyRequest
 *   GrabPointerRequest
-GrabServerRequest
+*   GrabServerRequest
 *   InstallColormapRequest
 *   InternAtomRequest
-KillClientRequest
+*   KillClientRequest
 *   ListExtensionsRequest
 *   ListFontsRequest
-ListFontsWithInfoRequest
+*   ListFontsWithInfoRequest
 *   ListHostsRequest
 *   ListInstalledColormapsRequest
 *   ListPropertiesRequest
@@ -92,7 +92,7 @@ ListFontsWithInfoRequest
 *   RecolorCursorRequest
 *   ReparentWindowRequest
 *   RotatePropertiesRequest
-SendEventRequest
+*   SendEventRequest
 SetAccessControlRequest
 SetClipRectanglesRequest
 SetCloseDownModeRequest
@@ -106,11 +106,11 @@ SetSelectionOwnerRequest
 *   StoreColorsRequest
 StoreNamedColorRequest
 TranslateCoordinatesRequest
-UngrabButtonRequest
-UngrabKeyboardRequest
-UngrabKeyRequest
+*   UngrabButtonRequest
+*   UngrabKeyboardRequest
+*   UngrabKeyRequest
 *   UngrabPointerRequest
-UngrabServerRequest
+*   UngrabServerRequest
 *   UninstallColormapRequest
 *   UnmapSubwindowsRequest
 *   UnmapWindowRequest

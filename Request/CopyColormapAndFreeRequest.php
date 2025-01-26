@@ -14,8 +14,4 @@ class CopyColormapAndFreeRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

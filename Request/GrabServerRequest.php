@@ -12,8 +12,4 @@ class GrabServerRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

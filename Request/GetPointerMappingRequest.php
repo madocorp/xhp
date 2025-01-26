@@ -15,19 +15,18 @@ class GetPointerMappingRequest extends Request {
 
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['n', Type::CARD8],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['unused', Type::STRING8, 24, false]
+    ]);
+    $n = $response['n'];
+    $mapping = $this->receiveResponse([['map', Type::STRING8, $n, false]], false);
+    $response['mapping'] = unpack("C{$n}", $mapping);
+    return $response;
   }
 
 }
 
-/*
-  public static function GetPointerMapping() {
-▶
-     1     1                               Reply
-     1     n                               length of map
-     2     CARD16                          sequence number
-     4     (n+p)/4                         reply length
-     24                                    unused
-     n     LISTofCARD8                     map
-     p                                     unused, p=pad(n)
-*/

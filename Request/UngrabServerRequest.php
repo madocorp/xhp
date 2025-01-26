@@ -12,8 +12,4 @@ class UngrabServerRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

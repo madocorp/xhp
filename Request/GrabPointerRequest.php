@@ -4,10 +4,7 @@ namespace X11;
 
 class GrabPointerRequest extends Request {
 
-  public function __construct(
-    $ownerEvents, $grabWindow, $eventMask, $pointerMode,
-    $keyboardMode, $confineTo, $cursor, $timestamp
-  ) {
+  public function __construct($ownerEvents, $grabWindow, $eventMask, $pointerMode, $keyboardMode, $confineTo, $cursor, $timestamp) {
     $this->sendRequest([
       ['opcode', 26, Type::BYTE],
       ['ownerEvents', $ownerEvents, Type::BOOL],
@@ -24,14 +21,13 @@ class GrabPointerRequest extends Request {
   }
 
   protected function processResponse() {
-    $response = $this->receiveResponse([
+    return $this->receiveResponse([
       ['reply', Type::BYTE],
       ['status', Type::ENUM8, ['Success', 'AlreadyGrabbed', 'InvalidTime', 'NotViewable', 'Frozen']],
       ['sequenceNumber', Type::CARD16],
       ['replyLength', Type::CARD32],
       ['unused', Type::STRING8, 24, false]
-    ]);
-    return false;
+    ]);;
   }
 
 }

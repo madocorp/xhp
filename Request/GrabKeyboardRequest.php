@@ -13,28 +13,19 @@ class GrabKeyboardRequest extends Request {
       ['timestamp', $timestamp, Type::CARD32],
       ['pointerMode', $pointerMode, Type::ENUM8, ['Synchronous', 'Asynchronous']],
       ['keyboardMode', $pointerMode, Type::ENUM8, ['Synchronous', 'Asynchronous']],
-      ['unused', 0, Type::BYTE]
+      ['unused', 0, Type::CARD16]
     ]);
     Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['status', Type::ENUM8, ['Success', 'AlreadyGrabbed', 'InvalidTime', 'NotViewable', 'Frozen']],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['unused', Type::STRING8, 24, false]
+    ]);
   }
 
 }
-
-/*
-  public static function GrabKeyboard() {
-▶
-     1     1                               Reply
-     1                                     status
-          0     Success
-          1     AlreadyGrabbed
-          2     InvalidTime
-          3     NotViewable
-          4     Frozen
-     2     CARD16                          sequence number
-     4     0                               reply length
-     24                                    unused
-*/

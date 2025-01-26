@@ -14,18 +14,24 @@ class GetModifierMappingRequest extends Request {
   }
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['n', Type::CARD8],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['unused', Type::STRING8, 24, false]
+    ]);
+    $map = [];
+    for ($i = 0; $i < $response['n']; $i++) {
+      $map[] =  ["modifier{$i}", Type::KEYCODE];
+    }
+    $modifiers = [];
+    for ($i = 0; $i < 8; $i++) {
+      $modifiers[] = array_values($this->receiveResponse($map, false));
+    }
+    $response['mapping'] = $modifiers;
+    return $response;
   }
 
 }
 
-/*
-  public static function GetModifierMapping() {
-▶
-     1     1                               Reply
-     1     n                               keycodes-per-modifier
-     2     CARD16                          sequence number
-     4     2n                              reply length
-     24                                    unused
-     8n     LISTofKEYCODE                  keycodes
-*/

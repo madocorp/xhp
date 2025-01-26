@@ -377,11 +377,53 @@ class Event {
     echo "\033[0m"; // reset
   }
 
+  public static function arrayToBytes($name, $fields) {
+    $code = array_search($name, self::$names);
+    if ($code !== false) {
+      $definition = self::$definitions[$code];
+      $values = [];
+      $formatString = '';
+      $length = 0;
+      foreach ($definition as $field) {
+        if ($field[1] == Type::ENUM8) {
+          $fields[$field[0]];
+          $value = array_search($fields[$field[0]], $field[2]);
+          $formatString .= 'C';
+          $values[] = $value;
+          $length++;
+        } else if ($field[0] == 'code') {
+          $formatString .= 'C';
+          $values[] = $code;
+          $length++;
+        } else if ($field[0] == 'unused') {
+          $formatString .= str_repeat('C', $field[1]);
+          for ($i = 0; $i < $field[1]; $i++) {
+            $values[] = 0;
+          }
+          $length += $field[1];
+        } else {
+          $formatString .= Type::$format[$field[1]];
+          $values[] = $fields[$field[0]];
+          $length += Type::$size[Type::$format[$field[1]]];
+        }
+      }
+      $n = 32 - $length;
+      for ($i = 0; $i < $n; $i++) {
+        $formatString .= 'C';
+        $values[] = 0;
+      }
+      $bytes = pack($formatString, ...$values);
+    } else {
+      throw new \Exception('Unknown event.');
+    }
+    return $bytes;
+  }
+
   public static function bytesToArray($bytes) {
     $type = unpack('C', $bytes);
     $type = $type[1];
     if (!isset(self::$names[$type])) {
-      echo "Unknown event\n";
+      echo "Unknown event.\n";
       return false;
     }
     $name = self::$names[$type];

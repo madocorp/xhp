@@ -15,8 +15,4 @@ class UngrabButtonRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

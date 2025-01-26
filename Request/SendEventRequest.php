@@ -8,15 +8,11 @@ class SendEventRequest extends Request {
     $this->sendRequest([
       ['opcode', 25, Type::BYTE],
       ['propagate', 0, Type::BOOL],
-      ['requestLength', 11, Type::CARD16],
+      ['requestLength', 3, Type::CARD16],
       ['destination', $destination, Type::WINDOW],
-      ['eventMask', $eventMask, Type::CARD32],
-      ['event', $event, Type::EVENT]
+      ['eventMask', $eventMask, Type::BITMASK32, ['KeyPress', 'KeyRelease', 'ButtonPress', 'ButtonRelease', 'EnterWindow', 'LeaveWindow', 'PointerMotion', 'PointerMotionHint', 'Button1Motion', 'Button2Motion', 'Button3Motion', 'Button4Motion', 'Button5Motion', 'ButtonMotion', 'KeymapState', 'Exposure', 'VisibilityChange', 'StructureNotify', 'ResizeRedirect', 'SubstructureNotify', 'SubstructureRedirect', 'FocusChange', 'PropertyChange', 'ColormapChange', 'OwnerGrabButton']],
+      ['event', $event, Type::STRING8, 32]
     ]);
-  }
-
-  protected function processResponse() {
-    return false;
   }
 
 }

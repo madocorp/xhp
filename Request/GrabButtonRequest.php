@@ -10,7 +10,7 @@ class GrabButtonRequest extends Request {
       ['ownerEvents', $ownerEvents, Type::BOOL],
       ['requestLength', 6, Type::CARD16],
       ['grabWindow', $grabWindow, Type::WINDOW],
-      ['EventMask', $eventMask, Type::CARD16],
+      ['eventMask', $eventMask, Type::BITMASK16, [false, false, 'ButtonPress', 'ButtonRelease', 'EnterWindow', 'LeaveWindow', 'PointerMotion', 'PointerMotionHint', 'Button1Motion', 'Button2Motion', 'Button3Motion', 'Button4Motion', 'Button5Motion', 'ButtonMotion', 'KeymapState']],
       ['pointerMode', $pointerMode, Type::ENUM8, ['Synchronous', 'Asynchronous']],
       ['keyboardMode', $pointerMode, Type::ENUM8, ['Synchronous', 'Asynchronous']],
       ['confineTo', $confineTo, Type::WINDOW],
@@ -19,10 +19,6 @@ class GrabButtonRequest extends Request {
       ['unused', 0, Type::BYTE],
       ['modifiers', $modifiers, Type::CARD16]
     ]);
-  }
-
-  protected function processResponse() {
-    return false;
   }
 
 }

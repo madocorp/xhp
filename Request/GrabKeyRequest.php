@@ -20,8 +20,4 @@ class GrabKeyRequest extends Request {
     ]);
   }
 
-  protected function processResponse() {
-    return false;
-  }
-
 }

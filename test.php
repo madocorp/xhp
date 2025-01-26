@@ -153,6 +153,7 @@ new \X11\ClearAreaRequest(false, $wid1, 200, 200, 200, 200);
 
 zzz();
 new \X11\ListFontsRequest(10, '*fixed*');
+new \X11\ListFontsWithInfoRequest(2, '*fixed*');
 $fid1 = Connection::generateId();
 new \X11\OpenFontRequest($fid1, '-misc-fixed-medium-r-semicondensed--0-0-75-75-c-0-iso8859-2');
 $fid2 = Connection::generateId();
@@ -193,6 +194,7 @@ new \X11\CreatePixmapRequest(24, $pmid3, $root, 100, 100);
 new \X11\PutImageRequest('ZPixmap', $pmid3, $gcid, 100, 100, 0, 0, 0, 24, pack("C*", ...array_fill(0, 4*100*100, 0xff)));
 new \X11\PolyArcRequest($pmid3, $gcid, [['x' => 10, 'y' => 10, 'width' => 80, 'height' => 80, 'angle1' => 0, 'angle2' => 360 * 64]]);
 new \X11\CopyAreaRequest($pmid3, $wid1, $gcid, 0, 0, 300, 300, 100, 100);
+new \X11\CopyPlaneRequest($pmid2, $pmid1, $gcid2, 0, 0, 0, 0, 16, 16, 1);
 
 zzz();
 new \X11\RecolorCursorRequest($crid2,  0xffff, 0xaaaa, 0x8888, 0x0, 0x0, 0x0);
@@ -249,6 +251,20 @@ new \X11\GrabPointerRequest(true, $wid2, ['ButtonPress'], 'Asynchronous', 'Async
 
 new \X11\ChangeActivePointerGrabRequest($crid2, 0, ['ButtonPress']);
 new \X11\UngrabPointerRequest(0);
+
+new \X11\GrabButtonRequest(true, $root, ['EnterWindow'], 'Asynchronous', 'Asynchronous', 0, 0, 1, 1);
+new \X11\UngrabButtonRequest(1, $root, 0);
+
+new \X11\GrabKeyboardRequest(true, $wid1, 0, 'Asynchronous', 'Asynchronous');
+new \X11\UngrabKeyboardRequest(0);
+
+new \X11\GrabKeyRequest(true, $root, 0, 130, 'Asynchronous', 'Asynchronous');
+new \X11\UngrabKeyRequest(130, $wid1, 0);
+
+new \X11\GrabServerRequest();
+new \X11\UngrabServerRequest();
+
+new \X11\KillClientRequest(0);
 
 zzz();
 
@@ -322,6 +338,9 @@ if ($alternativeVisual !== false) {
   zzz();
   new \X11\FreeColorsRequest($cmid2, 0, [['pixel' => $pixel]]);
 
+  $cmid3 = Connection::generateId();
+  new \X11\CopyColormapAndFreeRequest($cmid3, $cmid2);
+
   zzz();
   new \X11\FreeColormapRequest($cmid2);
 }
@@ -359,6 +378,15 @@ new \X11\InternAtomRequest(true, 'XSEL_DATA');
 $xseldata = Connection::getLastResponse();
 new \X11\GetSelectionOwnerRequest($clipboard['atom']);
 new \X11\ConvertSelectionRequest($root, $clipboard['atom'], $clipboard['atom'], $clipboard['atom'], 0);
+
+zzz();
+new \X11\GetInputFocusRequest();
+new \X11\GetModifierMappingRequest();
+new \X11\GetPointerMappingRequest();
+new \X11\GetMotionEventsRequest($wid1, time() - 1000, 0);
+
+zzz();
+new \X11\SendEventRequest(false, $wid1, ['MappingNotify'], Event::arrayToBytes('MappingNotify', ['count' => 1, 'state' => 'Modifier', 'sequenceNumber' => 1]));
 
 zzz();
 new \X11\NoOperationRequest(16);

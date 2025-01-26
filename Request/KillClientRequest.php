@@ -12,8 +12,5 @@ class KillClientRequest extends Request {
       ['resource', $resource, Type::CARD32]
     ]);
   }
-  protected function processResponse() {
-    return false;
-  }
 
 }

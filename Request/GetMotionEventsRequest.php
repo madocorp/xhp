@@ -10,31 +10,32 @@ class GetMotionEventsRequest extends Request {
       ['unused', 0, Type::BYTE],
       ['requestLength', 4, Type::CARD16],
       ['window', $window, Type::WINDOW],
-      ['start', $start, Type::CARD32],
-      ['stop', $stop, Type::CARD32]
+      ['start', $start, Type::TIMESTAMP],
+      ['stop', $stop, Type::TIMESTAMP]
     ]);
     Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {
-    return false;
+    $response = $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['unused', Type::BYTE],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['n', Type::CARD32],
+      ['unused', Type::STRING8, 20, false]
+    ]);
+    $n = $response['n'];
+    $events = [];
+    for ($i = 0; $i < $n; $i++) {
+      $events[] = $this->receiveResponse([
+        ['time', Type::TIMESTAMP],
+        ['x', Type::INT16],
+        ['y', Type::INT16]
+      ], false);
+    }
+    $response['events'] = $events;
+    return $response;
   }
 
 }
-
-/*
-  public static function GetMotionEvents() {
-▶
-     1     1                               Reply
-     1                                     unused
-     2     CARD16                          sequence number
-     4     2n                              reply length
-     4     n                               number of TIMECOORDs in events
-     20                                    unused
-     8n     LISTofTIMECOORD                events
-
-  TIMECOORD
-     4     TIMESTAMP                       time
-     2     INT16                           x
-     2     INT16                           y
-*/
