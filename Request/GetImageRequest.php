@@ -5,17 +5,19 @@ namespace X11;
 class GetImageRequest extends Request {
 
   public function __construct($format, $drawable, $x, $y, $width, $height, $planeMask) {
+    $opcode = 73;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 73, Type::BYTE],
-      ['format', $format, Type::ENUM8, [0, 'XYPixmap', 'ZPixmap']],
-      ['requestLength', 5, Type::CARD16],
-      ['drawable', $drawable, Type::DRAWABLE],
-      ['x', $x, Type::INT16],
-      ['y', $y, Type::INT16],
-      ['width', $width, Type::CARD16],
-      ['height', $height, Type::CARD16],
-      ['planeMask', $planeMask, Type::CARD32]
-    ]);
+      ['opcode', Type::BYTE],
+      ['format', Type::ENUM8, [0, 'XYPixmap', 'ZPixmap']],
+      ['requestLength', Type::CARD16],
+      ['drawable', Type::DRAWABLE],
+      ['x', Type::INT16],
+      ['y', Type::INT16],
+      ['width', Type::CARD16],
+      ['height', Type::CARD16],
+      ['planeMask', Type::CARD32]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
@@ -26,7 +28,7 @@ class GetImageRequest extends Request {
       ['sequenceNumber', Type::CARD16],
       ['replyLength', Type::CARD32],
       ['visual', Type::VISUALID],
-      ['unused', Type::STRING8, 20, false]
+      ['unused', Type::UNUSED, 20]
     ]);
     $data = $this->receiveResponse([
       ['data', Type::STRING8, $response['replyLength'] << 2]

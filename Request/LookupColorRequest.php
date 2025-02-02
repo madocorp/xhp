@@ -4,23 +4,26 @@ namespace X11;
 
 class LookupColorRequest extends Request {
 
-  public function __construct($colormap, $name) {
+  public function __construct($cmap, $name) {
+    $n = strlen($name);
+    $opcode = 92;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 92, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 3, Type::CARD16],
-      ['cmap', $colormap, Type::COLORMAP],
-      ['n', strlen($name), Type::CARD16],
-      ['unused', 0, Type::CARD16],
-      ['name', $name, Type::STRING8]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['cmap', Type::COLORMAP],
+      ['n', Type::CARD16],
+      ['unused', Type::UNUSED, 2],
+      ['name', Type::STRING8]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {
     return $this->receiveResponse([
       ['reply', Type::BYTE],
-      ['unused', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
       ['sequenceNumber', Type::CARD16],
       ['replyLength', Type::CARD32],
       ['exactRed', Type::CARD16],
@@ -29,7 +32,7 @@ class LookupColorRequest extends Request {
       ['visualRed', Type::CARD16],
       ['visualGreen', Type::CARD16],
       ['visualBlue', Type::CARD16],
-      ['unused', Type::STRING8, 12, false]
+      ['unused', Type::UNUSED, 12]
     ]);
   }
 

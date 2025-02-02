@@ -5,25 +5,27 @@ namespace X11;
 class GetMotionEventsRequest extends Request {
 
   public function __construct($window, $start, $stop) {
+    $opcode = 39;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 39, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 4, Type::CARD16],
-      ['window', $window, Type::WINDOW],
-      ['start', $start, Type::TIMESTAMP],
-      ['stop', $stop, Type::TIMESTAMP]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW],
+      ['start', Type::TIMESTAMP],
+      ['stop', Type::TIMESTAMP]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {
     $response = $this->receiveResponse([
       ['reply', Type::BYTE],
-      ['unused', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
       ['sequenceNumber', Type::CARD16],
       ['replyLength', Type::CARD32],
       ['n', Type::CARD32],
-      ['unused', Type::STRING8, 20, false]
+      ['unused', Type::UNUSED, 20]
     ]);
     $n = $response['n'];
     $events = [];

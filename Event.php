@@ -367,16 +367,6 @@ class Event {
   protected static $end = false;
   protected static $eventHandler = false;
 
-  protected static function debug($event, $name) {
-    echo "\033[36m"; // cyan
-    echo "\n", str_pad("[ {$name} ]", 120, '-', STR_PAD_BOTH), "\n";
-    foreach ($event as $name => $value) {
-      echo '*  ', $name, ': ', $value, "\n";
-    }
-    echo "\n";
-    echo "\033[0m"; // reset
-  }
-
   public static function arrayToBytes($name, $fields) {
     $code = array_search($name, self::$names);
     if ($code !== false) {
@@ -404,7 +394,7 @@ class Event {
         } else {
           $formatString .= Type::$format[$field[1]];
           $values[] = $fields[$field[0]];
-          $length += Type::$size[Type::$format[$field[1]]];
+          $length += Type::$size[$field[1]];
         }
       }
       $n = 32 - $length;
@@ -422,6 +412,8 @@ class Event {
   public static function bytesToArray($bytes) {
     $type = unpack('C', $bytes);
     $type = $type[1];
+    $sendEvent = (($type & 0x80) > 0);
+    $type = $type & 0x7f;
     if (!isset(self::$names[$type])) {
       echo "Unknown event.\n";
       return false;
@@ -443,8 +435,9 @@ class Event {
     $event = unpack($format, $bytes);
     unset($event['unused']);
     $event['name'] = $name;
+    $event['SendEvent'] = $sendEvent;
     if (DEBUG) {
-      self::debug($event, $name);
+      Debug::event($event, $name);
     }
     return $event;
   }

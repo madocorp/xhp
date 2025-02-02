@@ -5,12 +5,14 @@ namespace X11;
 class ConfigureWindowRequest extends Request {
 
   public function __construct($window, $values) {
+    $opcode = 12;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 12, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 3, Type::CARD16],
-      ['window', $window, Type::WINDOW],
-      ['values', $values, Type::VLIST, [
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW],
+      ['values', Type::VLIST, [
         ['x', Type::INT16],
         ['y', Type::INT16],
         ['width', Type::CARD16],
@@ -19,7 +21,7 @@ class ConfigureWindowRequest extends Request {
         ['sibling', Type::WINDOW],
         ['stackMode', Type::ENUM8, ['Above', 'Below', 'TopIf', 'BottomIf', 'Opposite']]
       ]]
-    ]);
+    ], $values);
   }
 
 }

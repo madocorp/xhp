@@ -5,26 +5,22 @@ namespace X11;
 class SetClipRectanglesRequest extends Request {
 
   public function __construct($ordering, $gc, $clipXOrigin, $clipYOrigin, $rectangles) {
-    $data = [
-      ['opcode', 59, Type::BYTE],
-      ['ordering', $ordering, Type::ENUM8, ['UnSorted', 'YSorted', 'YXSorted', 'YXBanded']],
-      ['requestLength', 3 + 2 * count($rectangles), Type::CARD16],
-      ['gc', $gc, Type::GCONTEXT],
-      ['clipXOrigin', $clipXOrigin, Type::INT16],
-      ['clipYOrigin', $clipYOrigin, Type::INT16],
-      ['dashes', $dashes, Type::STRING8]
-    ];
-    foreach ($rectangles as $rectangle) {
-      $data[] = ['x', $rectangle['x'], Type::INT16];
-      $data[] = ['y', $rectangle['y'], Type::INT16];
-      $data[] = ['width', $rectangle['width'], Type::CARD16];
-      $data[] = ['height', $rectangle['height'], Type::CARD16];
-    }
-    $this->sendRequest($data);
-  }
-
-  protected function processResponse() {
-    return false;
+    $opcode = 59;
+    $values = get_defined_vars();
+    $this->sendRequest([
+      ['opcode', Type::BYTE],
+      ['ordering', Type::ENUM8, ['UnSorted', 'YSorted', 'YXSorted', 'YXBanded']],
+      ['requestLength', Type::CARD16],
+      ['gc', Type::GCONTEXT],
+      ['clipXOrigin', Type::INT16],
+      ['clipYOrigin', Type::INT16],
+      ['rectangles', Type::FLIST, [
+        ['x', Type::INT16],
+        ['y', Type::INT16],
+        ['width', Type::CARD16],
+        ['height', Type::CARD16]
+      ]]
+    ], $values);
   }
 
 }

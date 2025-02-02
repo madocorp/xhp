@@ -5,12 +5,14 @@ namespace X11;
 class ChangeSaveSetRequest extends Request {
 
   public function __construct($mode, $window) {
+    $opcode = 6;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 6, Type::BYTE],
-      ['mode', $mode, Type::ENUM8, ['Insert', 'Delete']],
-      ['requestLength', 2, Type::CARD16],
-      ['window', $window, Type::WINDOW]
-    ]);
+      ['opcode', Type::BYTE],
+      ['mode', Type::ENUM8, ['Insert', 'Delete']],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW]
+    ], $values);
   }
 
 }

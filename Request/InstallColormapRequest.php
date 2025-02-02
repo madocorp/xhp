@@ -5,12 +5,14 @@ namespace X11;
 class InstallColormapRequest extends Request {
 
   public function __construct($colormap) {
+    $opcode = 81;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 81, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['colormap', $colormap, Type::COLORMAP]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['colormap', Type::COLORMAP]
+    ], $values);
   }
 
 }

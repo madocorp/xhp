@@ -9,20 +9,22 @@ class CreateWindowRequest extends Request {
     $y, $width, $height, $borderWidth,
     $class, $visual, $values
   ) {
+    $opcode = 1;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 1, Type::BYTE],
-      ['depth', $depth, Type::CARD8],
-      ['requestLength', 8, Type::CARD16],
-      ['wid', $wid, Type::WINDOW],
-      ['parent', $parent, Type::WINDOW],
-      ['x', $x, Type::INT16],
-      ['y', $y, Type::INT16],
-      ['width', $width, Type::CARD16],
-      ['height', $height, Type::CARD16],
-      ['borderWidth', $borderWidth, Type::CARD16],
-      ['class', $class, Type::ENUM16, ['CopyFromParent', 'InputOutput', 'InputOnly']],
-      ['visual', $visual, Type::VISUALID],
-      ['values', $values, Type::VLIST, [
+      ['opcode', Type::BYTE],
+      ['depth', Type::CARD8],
+      ['requestLength', Type::CARD16],
+      ['wid', Type::WINDOW],
+      ['parent', Type::WINDOW],
+      ['x', Type::INT16],
+      ['y', Type::INT16],
+      ['width', Type::CARD16],
+      ['height', Type::CARD16],
+      ['borderWidth', Type::CARD16],
+      ['class', Type::ENUM16, ['CopyFromParent', 'InputOutput', 'InputOnly']],
+      ['visual', Type::VISUALID],
+      ['values', Type::VLIST, [
         ['backgroundPixmap', Type::PIXMAP],
         ['backgroundPixel', Type::CARD32],
         ['borderPixmap', Type::PIXMAP],
@@ -39,7 +41,7 @@ class CreateWindowRequest extends Request {
         ['colormap', Type::CARD32],
         ['cursor', Type::CARD32]
       ]]
-    ]);
+    ], $values);
   }
 
 }

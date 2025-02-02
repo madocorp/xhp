@@ -5,14 +5,16 @@ namespace X11;
 class GetKeyboardMappingRequest extends Request {
 
   public function __construct($firstKeycode, $count) {
+    $opcode = 101;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 101, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['firstKeycode', $firstKeycode, Type::KEYCODE],
-      ['count', $count, Type::BYTE],
-      ['unused', 0, Type::CARD16]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['firstKeycode', Type::KEYCODE],
+      ['count', Type::BYTE],
+      ['unused', Type::UNUSED, 2]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
@@ -22,7 +24,7 @@ class GetKeyboardMappingRequest extends Request {
       ['n', Type::CARD8],
       ['sequenceNumber', Type::CARD16],
       ['replyLength', Type::CARD32],
-      ['autoRepeats', Type::STRING8, 24, false]
+      ['unused', Type::UNUSED, 24]
     ]);
     $n = $response['n'];
     $m = $response['replyLength'] / $n;

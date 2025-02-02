@@ -5,16 +5,18 @@ namespace X11;
 class GetPropertyRequest extends Request {
 
   public function __construct($delete, $window, $property, $type, $longOffset, $longLength) {
+    $opcode = 20;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 20, Type::BYTE],
-      ['delete', $delete, Type::BOOL],
-      ['requestLength', 6, Type::CARD16],
-      ['window', $window, Type::WINDOW],
-      ['property', $property, Type::ATOM],
-      ['type', $type, Type::ATOM],
-      ['longOffset', $longOffset, Type::CARD32],
-      ['longLength', $longLength, Type::CARD32]
-    ]);
+      ['opcode', Type::BYTE],
+      ['delete', Type::BOOL],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW],
+      ['property', Type::ATOM],
+      ['type', Type::ATOM],
+      ['longOffset', Type::CARD32],
+      ['longLength', Type::CARD32]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
@@ -27,7 +29,7 @@ class GetPropertyRequest extends Request {
       ['type', Type::ATOM],
       ['bytesAfter', Type::CARD32],
       ['lengthInUnits', Type::CARD32],
-      ['unused', Type::STRING8, 12, false]
+      ['unused', Type::UNUSED, 12]
     ]);
     $value = $this->receiveResponse([
       ['value', Type::STRING8, $response['replyLength'] << 2],

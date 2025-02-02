@@ -5,18 +5,16 @@ namespace X11;
 class SetSelectionOwnerRequest extends Request {
 
   public function __construct($window, $selection, $timestamp) {
+    $opcode = 22;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 22, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 4, Type::CARD16],
-      ['window', $window, Type::WINDOW],
-      ['selection', $selection, Type::ATOM],
-      ['timestamp', $timestamp, Type::TIMESTAMP]
-    ]);
-  }
-
-  protected function processResponse() {
-    return false;
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW],
+      ['selection', Type::ATOM],
+      ['timestamp', Type::TIMESTAMP]
+    ], $values);
   }
 
 }

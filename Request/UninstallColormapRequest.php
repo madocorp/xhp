@@ -5,16 +5,14 @@ namespace X11;
 class UninstallColormapRequest extends Request {
 
   public function __construct($colormap) {
+    $opcode = 82;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 82, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['colormap', $colormap, Type::COLORMAP]
-    ]);
-  }
-
-  protected function processResponse() {
-    return false;
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['colormap', Type::COLORMAP]
+    ], $values);
   }
 
 }

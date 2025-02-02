@@ -5,35 +5,27 @@ namespace X11;
 class SetPointerMappingRequest extends Request {
 
   public function __construct($map) {
-    $length = count($map);
-    $pad = Connection::pad4($length);
-    $data = [
-      ['opcode', 116, Type::BYTE],
-      ['lengthOfMap', $length, Type::CARD8],
-      ['requestLength', 1 + (($length + $pad) >> 2), Type::CARD16],
-    ];
-    foreach ($map as $button) {
-      $data[] = ['button', $button, Type::CARD8];
-    }
-    $data[] = ['pad', $pad, Type::PAD4];
-    $this->sendRequest($data);
+    $lengthOfMap = count($map);
+    $opcode = 116;
+    $values = get_defined_vars();
+    $this->sendRequest([
+      ['opcode', Type::BYTE],
+      ['lengthOfMap', Type::CARD8],
+      ['requestLength', Type::CARD16],
+      ['map', Type::FLIST, [['button', Type::CARD8]]],
+      ['pad', Type::UNUSED, Connection::pad4($lengthOfMap)]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['status', Type::ENUM8, ['Success', 'Busy']],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['unused', Type::UNUSED, 24]
+    ]);
   }
 
 }
-
-/*
-  public static function SetPointerMapping() {
-▶
-     1     1                               Reply
-     1                                     status
-          0     Success
-          1     Busy
-     2     CARD16                          sequence number
-     4     0                               reply length
-     24                                    unused
-*/

@@ -5,25 +5,27 @@ namespace X11;
 class QueryTreeRequest extends Request {
 
   public function __construct($window) {
+    $opcode = 15;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 15, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['window', $window, Type::WINDOW]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {
     $response = $this->receiveResponse([
       ['reply', Type::BYTE],
-      ['unused', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
       ['sequenceNumber', Type::CARD16],
       ['replyLength', Type::CARD32],
       ['root', Type::WINDOW],
       ['parent', Type::WINDOW],
       ['n', Type::CARD16],
-      ['unused', Type::STRING8, 14, false]
+      ['unused', Type::UNUSED, 14]
     ]);
     $n = $response['n'];
     $children = [];

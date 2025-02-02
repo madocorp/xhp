@@ -5,12 +5,14 @@ namespace X11;
 class FreeCursorRequest extends Request {
 
   public function __construct($cursor) {
+    $opcode = 95;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 95, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['cursor', $cursor, Type::CURSOR],
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['cursor', Type::CURSOR],
+    ], $values);
   }
 
 }

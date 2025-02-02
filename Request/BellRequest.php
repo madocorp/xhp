@@ -5,11 +5,13 @@ namespace X11;
 class BellRequest extends Request {
 
   public function __construct($percent) {
+    $opcode = 104;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 104, Type::BYTE],
-      ['percent', $percent, Type::INT8],
-      ['requestLength', 1, Type::CARD16]
-    ]);
+      ['opcode', Type::BYTE],
+      ['percent', Type::INT8],
+      ['requestLength', Type::CARD16]
+    ], $values);
   }
 
 }

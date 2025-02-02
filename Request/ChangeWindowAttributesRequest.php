@@ -5,12 +5,14 @@ namespace X11;
 class ChangeWindowAttributesRequest extends Request {
 
   public function __construct($window, $values) {
+    $opcode = 2;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 2, Type::BYTE],
-      ['unuset', 0, Type::BYTE],
-      ['requestLength', 3, Type::CARD16],
-      ['window', $window, Type::WINDOW],
-      ['values', $values, Type::VLIST, [
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW],
+      ['values', Type::VLIST, [
         ['backgroundPixmap', Type::PIXMAP],
         ['backgroundPixel', Type::CARD32],
         ['borderPixmap', Type::PIXMAP],
@@ -27,7 +29,7 @@ class ChangeWindowAttributesRequest extends Request {
         ['colormap', Type::COLORMAP],
         ['cursor', Type::CURSOR]
       ]]
-    ]);
+    ], $values);
   }
 
 }

@@ -5,15 +5,18 @@ namespace X11;
 class OpenFontRequest extends Request {
 
   public function __construct($fid, $name) {
+    $lengthOfName = strlen($name);
+    $opcode = 45;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 45, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 3, Type::CARD16],
-      ['fid', $fid, Type::FONT],
-      ['lengthOfName', strlen($name), Type::CARD16],
-      ['unused', 0, Type::CARD16],
-      ['name', $name, Type::STRING8],
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['fid', Type::FONT],
+      ['lengthOfName', Type::CARD16],
+      ['unused', Type::UNUSED, 2],
+      ['name', Type::STRING8]
+    ], $values);
   }
 
 }

@@ -5,12 +5,14 @@ namespace X11;
 class GetGeometryRequest extends Request {
 
   public function __construct($drawable) {
+    $opcode = 14;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 14, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['drawable', $drawable, Type::DRAWABLE]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['drawable', Type::DRAWABLE]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
@@ -26,7 +28,7 @@ class GetGeometryRequest extends Request {
       ['width', Type::CARD16],
       ['height', Type::CARD16],
       ['borderWidth', Type::CARD16],
-      ['unused', Type::STRING8, 10, false]
+      ['unused', Type::UNUSED, 10]
     ]);
   }
 

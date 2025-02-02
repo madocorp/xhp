@@ -26,24 +26,12 @@ class Error {
   ];
   protected static $errorHandler = false;
 
-  protected static function debug($bytes, $name) {
-    echo "\033[31m"; // red
-    $error = self::bytesToError($bytes);
-    echo "\nERROR: {$name}\n";
-    foreach ($error as $name => $value) {
-      if ($name == 'data' && !in_array($name, self::$hasData)) {
-        continue;
-      }
-      echo '  ', $name, ': ', $value, "\n";
-    }
-    echo "\n";
-    echo "\033[0m"; // reset
-  }
-
   protected static function bytesToError($bytes) {
     $format = [];
     foreach (self::$definition as $field) {
-      $format[] = Type::$format[$field[1]] . $field[0];
+      $name = $field[0];
+      $type = $field[1];
+      $format[] = Type::$format[$type] . $name;
     }
     $format = implode('/', $format);
     $error = unpack($format, $bytes);
@@ -63,7 +51,7 @@ class Error {
     $code = $type[2];
     $name = self::$codes[$code];
     if (DEBUG) {
-      self::debug($bytes, $name);
+      Debug::error(self::bytesToError($bytes), $name, in_array($name, self::$hasData));
     }
     if (self::$errorHandler !== false) {
       $error = self::bytesToError($bytes);

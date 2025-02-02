@@ -5,11 +5,13 @@ namespace X11;
 class UngrabServerRequest extends Request {
 
   public function __construct() {
+    $opcode = 37;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 37, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 1, Type::CARD16]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16]
+    ], $values);
   }
 
 }

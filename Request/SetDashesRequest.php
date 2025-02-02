@@ -5,21 +5,19 @@ namespace X11;
 class SetDashesRequest extends Request {
 
   public function __construct($gc, $dashOffset, $dashes) {
-    $length = strlen($dashes);
+    $n = count($dashes);
+    $opcode = 58;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 58, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 3, Type::CARD16],
-      ['gc', $gc, Type::GCONTEXT],
-      ['dashOffset', $dashOffset, Type::CARD16],
-      ['n', $length, Type::CARD16],
-      ['dashes', $dashes, Type::STRING8],
-      ['pad', Connection::pad4($length), Type::PAD4]
-    ]);
-  }
-
-  protected function processResponse() {
-    return false;
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['gc', Type::GCONTEXT],
+      ['dashOffset', Type::CARD16],
+      ['n', Type::CARD16],
+      ['dashes', Type::FLIST, [['dash', Type::CARD8]]],
+      ['pad', Type::UNUSED, Connection::pad4($n)]
+    ], $values);
   }
 
 }

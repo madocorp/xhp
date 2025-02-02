@@ -5,23 +5,25 @@ namespace X11;
 class GetSelectionOwnerRequest extends Request {
 
   public function __construct($selection) {
+    $opcode = 23;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 23, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['selection', $selection, Type::ATOM]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['selection', Type::ATOM]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {
     return $this->receiveResponse([
       ['reply', Type::BYTE],
-      ['unused', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
       ['sequenceNumber', Type::CARD16],
       ['replyLength', Type::CARD32],
       ['owner', Type::WINDOW],
-      ['unused', Type::STRING8, 20, false],
+      ['unused', Type::UNUSED, 20],
     ]);
   }
 

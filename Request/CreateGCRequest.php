@@ -5,13 +5,15 @@ namespace X11;
 class CreateGCRequest extends Request {
 
   public function __construct($cid, $drawable, $values) {
+    $opcode = 55;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 55, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 4, Type::CARD16],
-      ['cid', $cid, Type::GCONTEXT],
-      ['drawable', $drawable, Type::DRAWABLE],
-      ['values', $values, Type::VLIST, [
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['cid', Type::GCONTEXT],
+      ['drawable', Type::DRAWABLE],
+      ['values', Type::VLIST, [
         ['function', Type::ENUM8, ['Clear', 'And', 'AndReverse', 'Copy', 'AddInverted', 'NoOp', 'Xor', 'Or', 'Nor', 'Equiv', 'Invert', 'OrReverse', 'CopyInverted', 'OrInverted', 'Nand', 'Set']],
         ['planeMask', Type::CARD32],
         ['foreground', Type::CARD32],
@@ -36,7 +38,7 @@ class CreateGCRequest extends Request {
         ['dashes', Type::CARD8],
         ['arcMode', Type::ENUM8, ['Chord', 'PieSlice']]
       ]]
-    ]);
+    ], $values);
   }
 
 }

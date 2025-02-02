@@ -5,19 +5,20 @@ namespace X11;
 class RotatePropertiesRequest extends Request {
 
   public function __construct($window, $delta, $properties) {
-    $n = count($properties);
-    $data = [
-      ['opcode', 114, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 3 + $n, Type::CARD16],
-      ['window', $window, Type::WINDOW],
-      ['numberOfProperties', $n, Type::CARD16],
-      ['delta', $delta, Type::INT16],
-    ];
-    foreach ($properties as $property) {
-      $data[] = ['property', $property, Type::ATOM];
-    }
-    $this->sendRequest($data);
+    $numberOfProperties = count($properties);
+    $opcode = 114;
+    $values = get_defined_vars();
+    $this->sendRequest([
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW],
+      ['numberOfProperties', Type::CARD16],
+      ['delta', Type::INT16],
+      ['properties', Type::FLIST,
+        [['property', Type::ATOM]]
+      ]
+    ], $values);
   }
 
 }

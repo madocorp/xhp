@@ -101,31 +101,4 @@ class Connection {
     return self::$lastResponse;
   }
 
-  public static function byteDebug($bytes) {
-    $cut = '';
-    if (strlen($bytes) > 128) {
-      $cut = "\n... (+" . strlen($bytes) - 128 . " bytes)";
-      $bytes = substr($bytes, 0, 128);
-    }
-    echo "\033[33m"; // yellow
-    $bytes = unpack('C*', $bytes);
-    $n = count($bytes);
-    echo '| ';
-    foreach ($bytes as $i => $byte) {
-      $hex = dechex($byte);
-      echo '0x', ($byte < 0x10 ? '0' : ''), $hex, ' ';
-      if ($i % 4 == 0) {
-        echo '| ';
-      }
-      if ($i % 16 == 0 && $i < $n) {
-        echo "\n| ";
-      }
-    }
-    echo "{$cut}\n";
-    echo "\033[0m"; // reset
-  }
-
 }
-
-
-

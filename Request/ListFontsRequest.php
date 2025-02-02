@@ -5,26 +5,28 @@ namespace X11;
 class ListFontsRequest extends Request {
 
   public function __construct($maxNames, $pattern) {
-    $length = strlen($pattern);
+    $lengthOfPattern = strlen($pattern);
+    $opcode = 49;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 49, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['maxNames', $maxNames, Type::CARD16],
-      ['lengthOfPattern', $length, Type::CARD16],
-      ['pattern', $pattern, Type::STRING8]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['maxNames', Type::CARD16],
+      ['lengthOfPattern', Type::CARD16],
+      ['pattern', Type::STRING8]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {
     $response = $this->receiveResponse([
       ['reply', Type::BYTE],
-      ['unused', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
       ['sequenceNumber', Type::CARD16],
       ['replyLength', Type::CARD32],
       ['n', Type::CARD16],
-      ['unused', Type::STRING8, 22, false]
+      ['unused', Type::UNUSED, 22]
     ]);
     $fonts = [];
     $total = 0;
@@ -42,7 +44,7 @@ class ListFontsRequest extends Request {
     $pad = Connection::pad4($total);
     if ($pad > 0) {
       $this->receiveResponse([
-        ['pad', Type::PAD4, $pad]
+        ['pad', Type::UNUSED, $pad]
       ], false);
     }
     $response['fonts'] = $fonts;

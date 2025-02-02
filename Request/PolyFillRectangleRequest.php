@@ -5,19 +5,21 @@ namespace X11;
 class PolyFillRectangleRequest extends Request {
 
   public function __construct($drawable, $gc, $rectangles) {
+    $opcode = 70;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 70, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 3, Type::CARD16],
-      ['drawable', $drawable, Type::DRAWABLE],
-      ['gc', $gc, Type::GCONTEXT],
-      ['rectangles', $rectangles, Type::FLIST, [
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['drawable', Type::DRAWABLE],
+      ['gc', Type::GCONTEXT],
+      ['rectangles', Type::FLIST, [
         ['x', Type::INT16],
         ['y', Type::INT16],
         ['width', Type::CARD16],
         ['height', Type::CARD16]
       ]]
-    ]);
+    ], $values);
 
   }
 

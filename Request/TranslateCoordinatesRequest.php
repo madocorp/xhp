@@ -4,36 +4,33 @@ namespace X11;
 
 class TranslateCoordinatesRequest extends Request {
 
-  public function __construct($window, $srcX, $srcY) {
+  public function __construct($srcWindow, $dstWindow, $srcX, $srcY) {
+    $opcode = 40;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 40, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 4, Type::CARD16],
-      ['window', $window, Type::WINDOW],
-      ['srcX', $srcX, Type::INT16],
-      ['srcY', $srcY, Type::INT16]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['srcWindow', Type::WINDOW],
+      ['dstWindow', Type::WINDOW],
+      ['srcX', Type::INT16],
+      ['srcY', Type::INT16]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['sameScreen', Type::BOOL],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['child', Type::WINDOW],
+      ['dstX', Type::INT16],
+      ['dstY', Type::INT16],
+      ['unused', Type::UNUSED, 16]
+    ]);
   }
 
 }
 
-/*
-  public static function TranslateCoordinates() {
-▶
-     1     1                               Reply
-     1     BOOL                            same-screen
-     2     CARD16                          sequence number
-     4     0                               reply length
-     4     WINDOW                          child
-          0     None
-     2     INT16                           dst-x
-     2     INT16                           dst-y
-     16                                    unused
-
-
-*/

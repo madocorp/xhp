@@ -5,13 +5,16 @@ namespace X11;
 class NoOperationRequest extends Request {
 
   public function __construct($n) {
-    $nop = pack('C*', ...array_fill(0, $n * 4, 0));
+    $noOperation = pack('C*', ...array_fill(0, $n * 4, 0));
+    $opcode = 127;
+    unset($n);
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 127, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 1, Type::CARD16],
-      ['noOperation', $nop, Type::STRING8]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['noOperation', Type::STRING8]
+    ], $values);
   }
 
 }

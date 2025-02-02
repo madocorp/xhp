@@ -5,12 +5,14 @@ namespace X11;
 class CloseFontRequest extends Request {
 
   public function __construct($fid) {
+    $opcode = 46;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 46, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['fid', $fid, Type::FONT]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['fid', Type::FONT]
+    ], $values);
   }
 
 }

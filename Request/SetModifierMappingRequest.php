@@ -4,37 +4,38 @@ namespace X11;
 
 class SetModifierMappingRequest extends Request {
 
-  public function __construct($keycodesPerModifier, $map) {
-    $length = count($map);
-    $pad = Connection::pad4($length);
-    $data = [
-      ['opcode', 118, Type::BYTE],
-      ['keycodesPerModifier', $keycodesPerModifier, Type::CARD8],
-      ['requestLength', 1 + 2 * $length, Type::CARD16],
-    ];
-    foreach ($map as $keycode) {
-      $data[] = ['keycode', $keycode, Type::KEYCODE];
+  public function __construct($keycodesPerModifier, $keycodes) {
+    $flatKeycodes = [];
+    for ($j = 0; $j < 8; $j++) {
+      for ($i = 0; $i < $keycodesPerModifier; $i++) {
+        if (isset($keycodes[$j][$i])) {
+          $flatKeycodes[] = $keycodes[$j][$i];
+        } else {
+          $flatKeycodes[] = 0;
+        }
+      }
     }
-    $data[] = ['pad', $pad, Type::PAD4];
-    $this->sendRequest($data);
+    $keycodes = $flatKeycodes;
+    unset($flatKeycodes);
+    $opcode = 118;
+    $values = get_defined_vars();
+    $this->sendRequest([
+      ['opcode', Type::BYTE],
+      ['keycodesPerModifier', Type::CARD8],
+      ['requestLength', Type::CARD16],
+      ['keycodes', Type::FLIST, [['keycode', Type::KEYCODE]]]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
   protected function processResponse() {
-    return false;
+    return $this->receiveResponse([
+      ['reply', Type::BYTE],
+      ['status', Type::ENUM8, ['Success', 'Busy', 'Failed']],
+      ['sequenceNumber', Type::CARD16],
+      ['replyLength', Type::CARD32],
+      ['unused', Type::UNUSED, 24]
+    ]);
   }
 
 }
-
-/*
-  public static function SetModifierMapping() {
-▶
-     1     1                               Reply
-     1                                     status
-          0     Success
-          1     Busy
-          2     Failed
-     2     CARD16                          sequence number
-     4     0                               reply length
-     24                                    unused
-*/

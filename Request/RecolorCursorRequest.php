@@ -5,18 +5,20 @@ namespace X11;
 class RecolorCursorRequest extends Request {
 
   public function __construct($cursor, $foreRed, $foreGreen, $foreBlue, $backRed, $backGreen, $backBlue) {
+    $opcode = 96;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 96, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 5, Type::CARD16],
-      ['cursor', $cursor, Type::CURSOR],
-      ['foreRed', $foreRed, Type::CARD16],
-      ['foreGreen', $foreGreen, Type::CARD16],
-      ['foreBlue', $foreBlue, Type::CARD16],
-      ['backRed', $backRed, Type::CARD16],
-      ['backGreen', $backGreen, Type::CARD16],
-      ['backBlue', $backBlue, Type::CARD16]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['cursor', Type::CURSOR],
+      ['foreRed', Type::CARD16],
+      ['foreGreen', Type::CARD16],
+      ['foreBlue', Type::CARD16],
+      ['backRed', Type::CARD16],
+      ['backGreen', Type::CARD16],
+      ['backBlue', Type::CARD16]
+    ], $values);
   }
 
 }

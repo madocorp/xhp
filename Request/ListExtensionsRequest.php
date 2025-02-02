@@ -5,11 +5,13 @@ namespace X11;
 class ListExtensionsRequest extends Request {
 
   public function __construct() {
+    $opcode = 99;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 99, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 1, Type::CARD16],
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
@@ -19,7 +21,7 @@ class ListExtensionsRequest extends Request {
       ['n', Type::CARD8],
       ['sequenceNumber', Type::CARD16],
       ['replyLength', Type::CARD32],
-      ['unused', Type::STRING8, 24, false]
+      ['unused', Type::UNUSED, 24]
     ]);
     $extensions = [];
     $total = 0;
@@ -37,7 +39,7 @@ class ListExtensionsRequest extends Request {
     $pad = Connection::pad4($total);
     if ($pad > 0) {
       $this->receiveResponse([
-        ['pad', Type::PAD4, $pad]
+        ['pad', Type::UNUSED, $pad]
       ], false);
     }
     $response['extensions'] = $extension;

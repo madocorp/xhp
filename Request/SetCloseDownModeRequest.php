@@ -5,15 +5,13 @@ namespace X11;
 class SetCloseDownModeRequest extends Request {
 
   public function __construct($mode) {
+    $opcode = 112;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 112, Type::BYTE],
-      ['mode', $mode, Type::ENUM8, ['Destroy', 'RetainPermanent', 'RetainTemporary']],
-      ['requestLength', 1, Type::CARD16]
-    ]);
-  }
-
-  protected function processResponse() {
-    return false;
+      ['opcode', Type::BYTE],
+      ['mode', Type::ENUM8, ['Destroy', 'RetainPermanent', 'RetainTemporary']],
+      ['requestLength', Type::CARD16]
+    ], $values);
   }
 
 }

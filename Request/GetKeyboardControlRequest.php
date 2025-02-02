@@ -5,11 +5,13 @@ namespace X11;
 class GetKeyboardControlRequest extends Request {
 
   public function __construct() {
+    $opcode = 103;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 103, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 1, Type::CARD16],
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
@@ -25,7 +27,7 @@ class GetKeyboardControlRequest extends Request {
       ['bellPercent', Type::CARD8],
       ['bellPitch', Type::CARD16],
       ['bellDuration', Type::CARD16],
-      ['unused', Type::CARD16],
+      ['unused', Type::UNUSED, 2],
       ['autoRepeats', Type::STRING8, 32, false]
     ]);
   }

@@ -5,12 +5,14 @@ namespace X11;
 class DestroySubwindowsRequest extends Request {
 
   public function __construct($window) {
+    $opcode = 5;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 5, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['window', $window, Type::WINDOW]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW]
+    ], $values);
   }
 
 }

@@ -5,15 +5,17 @@ namespace X11;
 class ReparentWindowRequest extends Request {
 
   public function __construct($window, $parent, $x, $y) {
+    $opcode = 7;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 7, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 4, Type::CARD16],
-      ['window', $window, Type::WINDOW],
-      ['parent', $parent, Type::WINDOW],
-      ['x', $x, Type::INT16],
-      ['y', $y, Type::INT16],
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW],
+      ['parent', Type::WINDOW],
+      ['x', Type::INT16],
+      ['y', Type::INT16]
+    ], $values);
   }
 
 }

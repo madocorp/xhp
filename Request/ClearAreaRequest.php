@@ -5,16 +5,18 @@ namespace X11;
 class ClearAreaRequest extends Request {
 
   public function __construct($exposures, $window, $x, $y, $width, $height) {
+    $opcode = 61;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 61, Type::BYTE],
-      ['exposures', $exposures, Type::BOOL],
-      ['requestLength', 4, Type::CARD16],
-      ['window', $window, Type::WINDOW],
-      ['x', $x, Type::INT16],
-      ['y', $y, Type::INT16],
-      ['width', $width, Type::CARD16],
-      ['height', $height, Type::CARD16]
-    ]);
+      ['opcode', Type::BYTE],
+      ['exposures', Type::BOOL],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW],
+      ['x', Type::INT16],
+      ['y', Type::INT16],
+      ['width', Type::CARD16],
+      ['height', Type::CARD16]
+    ], $values);
   }
 
 }

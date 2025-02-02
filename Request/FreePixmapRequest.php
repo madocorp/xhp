@@ -5,12 +5,14 @@ namespace X11;
 class FreePixmapRequest extends Request {
 
   public function __construct($pixmap) {
+    $opcode = 54;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 54, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['pixmap', $pixmap, Type::PIXMAP]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['pixmap', Type::PIXMAP]
+    ], $values);
   }
 
 }

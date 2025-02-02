@@ -5,14 +5,16 @@ namespace X11;
 class UngrabKeyRequest extends Request {
 
   public function __construct($key, $grabWindow, $modifiers) {
+    $opcode = 34;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 34, Type::BYTE],
-      ['key', $key, Type::BYTE],
-      ['requestLength', 3, Type::CARD16],
-      ['grabWindow', $grabWindow, Type::WINDOW],
-      ['modifiers', $modifiers, Type::CARD16],
-      ['unused', 0, Type::CARD16]
-    ]);
+      ['opcode', Type::BYTE],
+      ['key', Type::BYTE],
+      ['requestLength', Type::CARD16],
+      ['grabWindow', Type::WINDOW],
+      ['modifiers', Type::CARD16],
+      ['unused', Type::UNUSED, 2]
+    ], $values);
   }
 
 }

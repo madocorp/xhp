@@ -5,16 +5,18 @@ namespace X11;
 class ChangePointerControlRequest extends Request {
 
   public function __construct($accelerationNumerator, $accelerationDenominator, $thresold, $doAcceleration, $doThresold) {
+    $opcode = 105;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 105, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 3, Type::CARD16],
-      ['accelerationNumrator', $accelerationNumerator, Type::INT16],
-      ['accelerationDenominator', $accelerationDenominator, Type::INT16],
-      ['thresold', $thresold, Type::INT16],
-      ['doAcceleration', $doAcceleration, Type::BOOL],
-      ['doThresold', $doThresold, Type::BOOL]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['accelerationNumerator', Type::INT16],
+      ['accelerationDenominator', Type::INT16],
+      ['thresold', Type::INT16],
+      ['doAcceleration', Type::BOOL],
+      ['doThresold', Type::BOOL]
+    ], $values);
   }
 
 }

@@ -5,11 +5,13 @@ namespace X11;
 class ChangeKeyboardControlRequest extends Request {
 
   public function __construct($values) {
+    $opcode = 102;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 102, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['values', $values, Type::VLIST, [
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['values', Type::VLIST, [
         ['keyClickPercent', Type::INT8],
         ['bellPercent', Type::INT8],
         ['bellPitch', Type::INT16],
@@ -19,7 +21,7 @@ class ChangeKeyboardControlRequest extends Request {
         ['key', Type::KEYCODE],
         ['autoRepeatMode', Type::ENUM8, ['Off', 'On', 'Default']]
       ]]
-    ]);
+    ], $values);
   }
 
 }

@@ -5,16 +5,18 @@ namespace X11;
 class GrabKeyboardRequest extends Request {
 
   public function __construct($ownerEvents, $grabWindow, $timestamp, $pointerMode, $keyboardMode) {
+    $opcode = 31;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 31, Type::BYTE],
-      ['ownerEvents', $ownerEvents, Type::BOOL],
-      ['requestLength', 4, Type::CARD16],
-      ['grabWindow', $grabWindow, Type::WINDOW],
-      ['timestamp', $timestamp, Type::CARD32],
-      ['pointerMode', $pointerMode, Type::ENUM8, ['Synchronous', 'Asynchronous']],
-      ['keyboardMode', $pointerMode, Type::ENUM8, ['Synchronous', 'Asynchronous']],
-      ['unused', 0, Type::CARD16]
-    ]);
+      ['opcode', Type::BYTE],
+      ['ownerEvents', Type::BOOL],
+      ['requestLength', Type::CARD16],
+      ['grabWindow', Type::WINDOW],
+      ['timestamp', Type::CARD32],
+      ['pointerMode', Type::ENUM8, ['Synchronous', 'Asynchronous']],
+      ['keyboardMode', Type::ENUM8, ['Synchronous', 'Asynchronous']],
+      ['unused', Type::UNUSED, 2]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
@@ -24,7 +26,7 @@ class GrabKeyboardRequest extends Request {
       ['status', Type::ENUM8, ['Success', 'AlreadyGrabbed', 'InvalidTime', 'NotViewable', 'Frozen']],
       ['sequenceNumber', Type::CARD16],
       ['replyLength', Type::CARD32],
-      ['unused', Type::STRING8, 24, false]
+      ['unused', Type::UNUSED, 24]
     ]);
   }
 

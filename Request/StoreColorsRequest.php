@@ -4,13 +4,15 @@ namespace X11;
 
 class StoreColorsRequest extends Request {
 
-  public function __construct($colormap, $colors) {
+  public function __construct($cmap, $colors) {
+    $opcode = 89;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 89, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['cmap', $colormap, Type::COLORMAP],
-      ['colors', $colors, Type::FLIST, [
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['cmap', Type::COLORMAP],
+      ['colors', Type::FLIST, [
         ['pixel', Type::CARD32],
         ['red', Type::CARD16],
         ['green', Type::CARD16],
@@ -18,7 +20,7 @@ class StoreColorsRequest extends Request {
         ['doColors', Type::BYTE],
         ['pad', Type::BYTE]
       ]]
-    ]);
+    ], $values);
   }
 
 }

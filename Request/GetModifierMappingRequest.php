@@ -5,11 +5,13 @@ namespace X11;
 class GetModifierMappingRequest extends Request {
 
   public function __construct() {
+    $opcode = 119;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 119, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 1, Type::CARD16]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
@@ -19,7 +21,7 @@ class GetModifierMappingRequest extends Request {
       ['n', Type::CARD8],
       ['sequenceNumber', Type::CARD16],
       ['replyLength', Type::CARD32],
-      ['unused', Type::STRING8, 24, false]
+      ['unused', Type::UNUSED, 24]
     ]);
     $map = [];
     for ($i = 0; $i < $response['n']; $i++) {

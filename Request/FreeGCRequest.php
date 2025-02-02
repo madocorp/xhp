@@ -5,12 +5,14 @@ namespace X11;
 class FreeGCRequest extends Request {
 
   public function __construct($gc) {
+    $opcode = 60;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 60, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['gc', $gc, Type::GCONTEXT]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['gc', Type::GCONTEXT]
+    ], $values);
   }
 
 }

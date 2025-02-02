@@ -3,7 +3,7 @@
 namespace X11;
 
 define('X11\DEBUG', true);
-require_once 'X11.php';
+require_once '../X11.php';
 
 function eventHandler($event) {
   if ($event && $event['name'] == 'KeyPress') {
@@ -17,9 +17,17 @@ function zzz() {
   usleep(5000);
 }
 
+function errorHandler($errno, $errstr, $errfile, $errline) {
+  var_dump($errno, $errstr, $errfile, $errline);
+  exit(1);
+}
+set_error_handler('\X11\errorHandler');
+
 Event::setHandler('\X11\eventHandler');
 
 \X11\Connection::init();
+
+
 $screen = \X11\Connection::$data['screens'][0];
 
 $depth = $screen['rootDepth'];
@@ -46,6 +54,7 @@ new \X11\CreateWindowRequest(
 );
 new \X11\ChangePropertyRequest('Replace', $wid1, Atom::WM_NAME, Atom::STRING, 8, 'Hello World 1!');
 new \X11\MapWindowRequest($wid1);
+
 new \X11\GetWindowAttributesRequest($wid1);
 new \X11\GetPropertyRequest(false, $wid1, Atom::WM_NAME, Atom::STRING, 0, 100);
 
@@ -131,7 +140,10 @@ zzz();
 new \X11\PolyLineRequest('Origin', $wid1, $gcid, $points);
 
 zzz();
+new \X11\SetDashesRequest($gcid, 0, [8, 5, 3, 2, 1]);
+new \X11\ChangeGCRequest($gcid, ['lineStyle' => 'OnOffDash']);
 new \X11\PolyRectangleRequest($wid1, $gcid, [['x' => 500, 'y' => 400, 'width' => 100, 'height' => 50]]);
+new \X11\ChangeGCRequest($gcid, ['lineStyle' => 'Solid']);
 
 zzz();
 new \X11\PolySegmentRequest($wid1, $gcid, [['x1' => 500, 'y1' => 400, 'x2' => 550, 'y2' => 450]]);
@@ -146,24 +158,39 @@ zzz();
 new \X11\PolyFillArcRequest($wid1, $gcid, [['x' => 500, 'y' => 100, 'width' => 100, 'height' => 50, 'angle1' => 0, 'angle2' => 180 * 64]]);
 
 zzz();
+new \X11\SetClipRectanglesRequest('UnSorted', $gcid, 0, 0, [['x' => 100, 'y' => 0, 'width' => 80, 'height' => 100]]);
 new \X11\FillPolyRequest($wid1, $gcid, 'Convex', 'Origin', [['x' => 100, 'y' => 0], ['x' => 200, 'y' => 0], ['x' => 150, 'y' => 50]]);
+new \X11\SetClipRectanglesRequest('UnSorted', $gcid, 0, 0, [['x' => 0, 'y' => 0, 'width' => 640, 'height' => 480]]);
 
 zzz();
 new \X11\ClearAreaRequest(false, $wid1, 200, 200, 200, 200);
 
 zzz();
-new \X11\ListFontsRequest(10, '*fixed*');
+new \X11\ListFontsRequest(10, '*fixed*iso8859-2');
+$fonts = Connection::getLastResponse();
+$fonta = $fonts['fonts'][0];
+new \X11\ListFontsRequest(10, '*fixed*iso10646-1');
+$fonts = Connection::getLastResponse();
+$fontb = $fonts['fonts'][0];
+new \X11\ListFontsRequest(10, '*helvetica*iso8859-2');
+$fonts = Connection::getLastResponse();
+$fontc = $fonts['fonts'][0];
 new \X11\ListFontsWithInfoRequest(2, '*fixed*');
 $fid1 = Connection::generateId();
-new \X11\OpenFontRequest($fid1, '-misc-fixed-medium-r-semicondensed--0-0-75-75-c-0-iso8859-2');
+new \X11\OpenFontRequest($fid1, $fonta);
 $fid2 = Connection::generateId();
-new \X11\OpenFontRequest($fid2, '-misc-fixed-medium-r-normal-ko-0-0-100-100-c-0-iso10646-1');
+new \X11\OpenFontRequest($fid2, $fontb);
+$fid4 = Connection::generateId();
+new \X11\OpenFontRequest($fid4, $fontc);
+
 $fid3 = Connection::generateId();
 new \X11\OpenFontRequest($fid3, 'cursor');
 new \X11\ChangeGCRequest($gcid, ['font' => $fid1, 'background' => 0x550000]);
 new \X11\ImageText8Request($wid2, $gcid, 10, 10, mb_convert_encoding('Hello Wőrld!','ISO8859-2','UTF-8'));
 new \X11\ChangeGCRequest($gcid, ['font' => $fid2, 'background' => 0x550000]);
 new \X11\ImageText16Request($wid2, $gcid, 10, 30, 'Hélló Wőrld!');
+new \X11\PolyText8Request($wid1, $gcid, 10, 400, [[0, 'ABC'], $fid4, [0, 'DEF']]);
+new \X11\PolyText16Request($wid1, $gcid, 10, 440, [[0, 'FGH'], $fid2, [10, 'IJK']]);
 
 zzz();
 $pmid1 = Connection::generateId();
@@ -288,7 +315,6 @@ if ($alternativeVisual !== false) {
   zzz();
   $cmid1 = Connection::generateId();
   new \X11\CreateColormapRequest('All', $cmid1, $wid2, $alternativeVisual);
-
   $colors = [];
   for ($i = 0; $i < 256; $i++) {
     $color = [
@@ -302,6 +328,7 @@ if ($alternativeVisual !== false) {
     $colors[] = $color;
   }
   new \X11\StoreColorsRequest($cmid1, $colors);
+  new \X11\StoreNamedColorRequest(0x1, $cmid1, 0xff, 'Red');
 
   new \X11\InstallColormapRequest($cmid1);
 
@@ -345,6 +372,7 @@ if ($alternativeVisual !== false) {
   new \X11\FreeColormapRequest($cmid2);
 }
 
+
 zzz();
 new \X11\DeletePropertyRequest($wid1, Atom::WM_NAME);
 
@@ -376,6 +404,7 @@ new \X11\InternAtomRequest(true, 'CLIPBOARD');
 $clipboard = Connection::getLastResponse();
 new \X11\InternAtomRequest(true, 'XSEL_DATA');
 $xseldata = Connection::getLastResponse();
+
 new \X11\GetSelectionOwnerRequest($clipboard['atom']);
 new \X11\ConvertSelectionRequest($root, $clipboard['atom'], $clipboard['atom'], $clipboard['atom'], 0);
 
@@ -389,12 +418,32 @@ zzz();
 new \X11\SendEventRequest(false, $wid1, ['MappingNotify'], Event::arrayToBytes('MappingNotify', ['count' => 1, 'state' => 'Modifier', 'sequenceNumber' => 1]));
 
 zzz();
+new \X11\SetAccessControlRequest('Enable');
+new \X11\SetCloseDownModeRequest('Destroy');
+new \X11\SetFontPathRequest(['/usr/share/fonts/X11/misc']);
+new \X11\SetFontPathRequest([]);
+new \X11\SetSelectionOwnerRequest($wid1, $clipboard['atom'] , 0);
+
+zzz();
+new \X11\SetInputFocusRequest('None', $wid1, 0);
+
+zzz();
+new \X11\SetModifierMappingRequest(2, [[50, 62], [66, 0], [37, 105], [64, 204],  [77, 0], [203, 0], [133, 134], [92, 0]]);
+
+zzz();
+new \X11\SetPointerMappingRequest([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+
+zzz();
+new \X11\TranslateCoordinatesRequest($wid1, $wid2, 0, 0);
+
+zzz();
 new \X11\NoOperationRequest(16);
 
 zzz();
 new \X11\BellRequest(50);
 
 Event::loop();
+
 
 new \X11\FreeGCRequest($gcid);
 new \X11\FreePixmapRequest($pmid1);

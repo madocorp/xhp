@@ -4,23 +4,26 @@ namespace X11;
 
 class SetFontPathRequest extends Request {
 
-  public function __construct($path) {
-    $length = strlen($path);
+  public function __construct($paths) {
+    $opcode = 51;
+    $numberOfStrings = count($paths);
+    $values = get_defined_vars();
+    $totalLength = 0;
+    foreach ($paths as $path) {
+      $totalLength += strlen($path) + 1;
+    }
+    $pad = Connection::pad4($totalLength);
     $this->sendRequest([
-      ['opcode', 51, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['numberOfStrings', $n, Type::CARD16],
-      ['unused', 0, Type::CARD16],
-      ['lengthOfPattern', $length, Type::PAD4],
-      ['path', $path, Type::STRING8],
-      ['pad', Connection::pad4($length), Type::PAD4]
-    ]);
-
-  }
-
-  protected function processResponse() {
-    return false;
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['numberOfStrings', Type::CARD16],
+      ['unused', Type::UNUSED, 2],
+      ['paths', Type::FLIST, [
+        ['path', Type::STR]
+      ]],
+      ['unused', Type::UNUSED, $pad]
+    ], $values);
   }
 
 }

@@ -4,22 +4,24 @@ namespace X11;
 
 class PutImageRequest extends Request {
 
-  public function __construct($format, $drawable, $gc, $width, $height, $dstX, $dstY, $leftPad, $depth, $imageData) {
+  public function __construct($format, $drawable, $gc, $width, $height, $dstX, $dstY, $leftPad, $depth, $data) {
+    $opcode = 72;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 72, Type::BYTE],
-      ['format', $format, Type::ENUM8, ['Bitmap', 'XYPixmap', 'ZPixmap']],
-      ['requestLength', 6, Type::CARD16],
-      ['drawable', $drawable, Type::DRAWABLE],
-      ['gc', $gc, Type::GCONTEXT],
-      ['width', $width, Type::CARD16],
-      ['height', $height, Type::CARD16],
-      ['dstX', $dstX, Type::INT16],
-      ['dstY', $dstY, Type::INT16],
-      ['leftPad', $leftPad, Type::CARD8],
-      ['depth', $depth, Type::CARD8],
-      ['unused', 0, Type::CARD16],
-      ['data', $imageData, Type::STRING8]
-    ]);
+      ['opcode', Type::BYTE],
+      ['format', Type::ENUM8, ['Bitmap', 'XYPixmap', 'ZPixmap']],
+      ['requestLength', Type::CARD16],
+      ['drawable', Type::DRAWABLE],
+      ['gc', Type::GCONTEXT],
+      ['width', Type::CARD16],
+      ['height', Type::CARD16],
+      ['dstX', Type::INT16],
+      ['dstY', Type::INT16],
+      ['leftPad', Type::CARD8],
+      ['depth', Type::CARD8],
+      ['unused', Type::UNUSED, 2],
+      ['data', Type::STRING8, false]
+    ], $values);
   }
 
 }

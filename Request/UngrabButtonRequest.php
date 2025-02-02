@@ -5,14 +5,16 @@ namespace X11;
 class UngrabButtonRequest extends Request {
 
   public function __construct($button, $window, $modifiers) {
+    $opcode = 29;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 29, Type::BYTE],
-      ['button', $button, Type::BYTE],
-      ['requestLength', 3, Type::CARD16],
-      ['window', $window, Type::WINDOW],
-      ['modifiers', $modifiers, Type::CARD16],
-      ['unused', 0, Type::CARD16]
-    ]);
+      ['opcode', Type::BYTE],
+      ['button', Type::BYTE],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW],
+      ['modifiers', Type::CARD16],
+      ['unused', Type::UNUSED, 2]
+    ], $values);
   }
 
 }

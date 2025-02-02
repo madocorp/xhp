@@ -5,13 +5,15 @@ namespace X11;
 class PolyArcRequest extends Request {
 
   public function __construct($drawable, $gc, $arcs) {
+    $opcode = 68;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 68, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 3, Type::CARD16],
-      ['drawable', $drawable, Type::DRAWABLE],
-      ['gc', $gc, Type::GCONTEXT],
-      ['arcs', $arcs, Type::FLIST, [
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['drawable', Type::DRAWABLE],
+      ['gc', Type::GCONTEXT],
+      ['arcs', Type::FLIST, [
         ['x', Type::INT16],
         ['y', Type::INT16],
         ['width', Type::CARD16],
@@ -19,7 +21,7 @@ class PolyArcRequest extends Request {
         ['angle1', Type::INT16],
         ['angle2', Type::INT16]
       ]]
-    ]);
+    ], $values);
   }
 
 }

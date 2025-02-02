@@ -4,33 +4,53 @@ namespace X11;
 
 class PolyText8Request extends Request {
 
-  public function __construct($drawable, $gc, $texts) {
-    $this->sendRequest([
-      ['opcode', 74, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 4, Type::CARD16],
-      ['drawable', $drawable, Type::DRAWABLE],
-      ['gc', $gc, Type::GCONTEXT],
-      ['x', $x, Type::INT16],
-      ['y', $y, Type::INT16]
-//???
-/*
-     n     LISTofTEXTITEM8                 items
-     p                                     unused, p=pad(n)  (p is always 0
-                                           or 1)
-
-  TEXTITEM8
-     1     m                               length of string (cannot be 255)
-     1     INT8                            delta
-     m     STRING8                         string
-  or
-     1     255                             font-shift indicator
-     1                                     font byte 3 (most-significant)
-     1                                     font byte 2
-     1                                     font byte 1
-     1                                     font byte 0 (least-significant)
-*/
-    ]);
+  public function __construct($drawable, $gc, $x, $y, $texts) {
+    $opcode = 74;
+    $template = [
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['drawable', Type::DRAWABLE],
+      ['gc', Type::GCONTEXT],
+      ['x', Type::INT16],
+      ['y', Type::INT16]
+    ];
+    $values = [
+      'opcode' => $opcode,
+      'drawable' => $drawable,
+      'gc' => $gc,
+      'x' => $x,
+      'y' => $y
+    ];
+    $n = 0;
+    foreach ($texts as $i => $item) {
+      if (is_array($item)) {
+        $template[] = ["text_{$i}.m", Type::CARD8];
+        $template[] = ["text_{$i}.delta", Type::INT8];
+        $template[] = ["text_{$i}.string", Type::STRING8, false];
+        $v = array_values($item);
+        $length = strlen($item[1]);
+        $values["text_{$i}.m"] = $length;
+        $values["text_{$i}.delta"] = $item[0];
+        $values["text_{$i}.string"] = $item[1];
+        $n += $length + 2;
+      } else {
+        $template[] = ["text_{$i}.m", Type::CARD8];
+        $template[] = ["text_{$i}.font", Type::CARD32];
+        $values["text_{$i}.m"] = 255;
+        if (Connection::machineByteOrder() == 0x6c) {
+          $a = ($item & 0xff000000) >> 24;
+          $b = ($item & 0xff0000) >> 16;
+          $c = ($item & 0xff00) >> 8;
+          $d = $item & 0xff;
+          $item = ($d << 24) | ($c << 16) | ($b << 8) | $a;
+        }
+        $values["text_{$i}.font"] = $item;
+        $n += 5;
+      }
+    }
+    $template[] = ['pad', Type::UNUSED, Connection::pad4($n)];
+    $this->sendRequest($template, $values);
   }
 
 }

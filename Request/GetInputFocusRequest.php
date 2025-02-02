@@ -5,11 +5,13 @@ namespace X11;
 class GetInputFocusRequest extends Request {
 
   public function __construct() {
+    $opcode = 43;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 43, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 1, Type::CARD16]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
@@ -20,7 +22,7 @@ class GetInputFocusRequest extends Request {
       ['sequenceNumber', Type::CARD16],
       ['replyLength', Type::CARD32],
       ['focus', Type::WINDOW],
-      ['unused', Type::STRING8, 20, false]
+      ['unused', Type::UNUSED, 20]
     ]);
   }
 

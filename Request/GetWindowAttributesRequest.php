@@ -5,12 +5,14 @@ namespace X11;
 class GetWindowAttributesRequest extends Request {
 
   public function __construct($window) {
+    $opcode = 3;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 3, Type::BYTE],
-      ['unuset', 0, Type::BYTE],
-      ['requestLength', 2, Type::CARD16],
-      ['window', $window, Type::WINDOW]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['window', Type::WINDOW]
+    ], $values);
     Connection::setResponse($this->processResponse());
   }
 
@@ -34,7 +36,7 @@ class GetWindowAttributesRequest extends Request {
       ['allEventMasks', Type::CARD32],
       ['yourEventMask', Type::CARD32],
       ['doNotPropagateMask', Type::CARD16],
-      ['unused', Type::CARD16]
+      ['unused', Type::UNUSED, 2]
     ]);
   }
 

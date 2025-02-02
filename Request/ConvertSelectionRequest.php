@@ -5,16 +5,18 @@ namespace X11;
 class ConvertSelectionRequest extends Request {
 
   public function __construct($requestor, $selection, $target, $property, $timestamp) {
+    $opcode = 24;
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 24, Type::BYTE],
-      ['unused', 0, Type::BYTE],
-      ['requestLength', 6, Type::CARD16],
-      ['requestor', $requestor, Type::WINDOW],
-      ['selection', $selection, Type::ATOM],
-      ['target', $target, Type::ATOM],
-      ['property', $property, Type::ATOM],
-      ['timestamp', $timestamp, Type::TIMESTAMP]
-    ]);
+      ['opcode', Type::BYTE],
+      ['unused', Type::UNUSED, 1],
+      ['requestLength', Type::CARD16],
+      ['requestor', Type::WINDOW],
+      ['selection', Type::ATOM],
+      ['target', Type::ATOM],
+      ['property', Type::ATOM],
+      ['timestamp', Type::TIMESTAMP]
+    ], $values);
   }
 
 }

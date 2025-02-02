@@ -4,25 +4,20 @@ namespace X11;
 
 class StoreNamedColorRequest extends Request {
 
-  public function __construct($doColors, $colormap, $pixel, $name) {
-    $length = strlen($name);
-    $pad = Connection::pad4($length);
+  public function __construct($doColors, $cmap, $pixel, $name) {
+    $opcode = 90;
+    $n = strlen($name);
+    $values = get_defined_vars();
     $this->sendRequest([
-      ['opcode', 90, Type::BYTE],
-      ['doColors', $doColors, Type::BYTE],
-      ['requestLength', 4 + (($length + $pad) >> 2), Type::CARD16],
-      ['cmap', $colormap, Type::COLORMAP],
-      ['pixel', $pixel, Type::CARD32],
-      ['n', $length, Type::CARD16],
-      ['unused', 0, Type::CARD16],
-      ['name', $name, Type::STRING8],
-      ['pad', $pad, Type::PAD4]
-    ]);
-  }
-
-
-  protected function processResponse() {
-    return false;
+      ['opcode', Type::BYTE],
+      ['doColors', Type::BYTE],
+      ['requestLength', Type::CARD16],
+      ['cmap', Type::COLORMAP],
+      ['pixel', Type::CARD32],
+      ['n', Type::CARD16],
+      ['unused', Type::UNUSED, 2],
+      ['name', Type::STRING8]
+    ], $values);
   }
 
 }
