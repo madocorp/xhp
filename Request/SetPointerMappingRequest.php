@@ -19,7 +19,8 @@ class SetPointerMappingRequest extends Request {
   }
 
   protected function processResponse() {
-    return $this->receiveResponse([
+
+    $res =  $this->receiveResponse([
       ['reply', Type::BYTE],
       ['status', Type::ENUM8, ['Success', 'Busy']],
       ['sequenceNumber', Type::CARD16],

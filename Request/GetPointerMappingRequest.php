@@ -25,8 +25,10 @@ class GetPointerMappingRequest extends Request {
       ['unused', Type::UNUSED, 24]
     ]);
     $n = $response['n'];
+    $p = Connection::pad4($n);
     $mapping = $this->receiveResponse([['map', Type::STRING8, $n, false]], false);
     $response['mapping'] = unpack("C{$n}", $mapping);
+    $this->receiveResponse([['unused', Type::UNUSED, $p]], false);
     return $response;
   }
 

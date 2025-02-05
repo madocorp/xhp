@@ -13,8 +13,8 @@ class ConnectionInitRequest extends Request {
       ['unused', Type::UNUSED, 1],
       ['protocolMajorVersion', Type::CARD16],
       ['protocolMinorVersion', Type::CARD16],
-      ['lengthOfAuthorizationProtocolName', Type::LENGTH16_4, 'authorizationProtocolName'],
-      ['lengthOfAuthorizationProtocolData', Type::LENGTH16_4, 'authorizationProtocolData'],
+      ['lengthOfAuthorizationProtocolName', Type::LENGTH16_N, 'authorizationProtocolName'],
+      ['lengthOfAuthorizationProtocolData', Type::LENGTH16_N, 'authorizationProtocolData'],
       ['unused', Type::UNUSED, 2],
       ['authorizationProtocolName', Type::STRING8],
       ['authorizationProtocolData', Type::STRING8]

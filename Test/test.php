@@ -3,7 +3,7 @@
 namespace X11;
 
 define('X11\DEBUG', true);
-require_once '../X11.php';
+require_once dirname(dirname(__FILE__)) . '/X11.php';
 
 function eventHandler($event) {
   if ($event && $event['name'] == 'KeyPress') {
@@ -26,7 +26,6 @@ set_error_handler('\X11\errorHandler');
 Event::setHandler('\X11\eventHandler');
 
 \X11\Connection::init();
-
 
 $screen = \X11\Connection::$data['screens'][0];
 
@@ -412,6 +411,7 @@ zzz();
 new \X11\GetInputFocusRequest();
 new \X11\GetModifierMappingRequest();
 new \X11\GetPointerMappingRequest();
+$pmap = Connection::getLastResponse();
 new \X11\GetMotionEventsRequest($wid1, time() - 1000, 0);
 
 zzz();
@@ -431,7 +431,7 @@ zzz();
 new \X11\SetModifierMappingRequest(2, [[50, 62], [66, 0], [37, 105], [64, 204],  [77, 0], [203, 0], [133, 134], [92, 0]]);
 
 zzz();
-new \X11\SetPointerMappingRequest([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+new \X11\SetPointerMappingRequest(range(1, $pmap['n']));
 
 zzz();
 new \X11\TranslateCoordinatesRequest($wid1, $wid2, 0, 0);

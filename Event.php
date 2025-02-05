@@ -21,7 +21,7 @@ class Event {
       ['eventY', Type::INT16],
       ['state', Type::CARD16],
       ['sameScreen', Type::BOOL],
-      ['unused', Type::BYTE]
+      ['unused', Type::BYTE, 1]
     ],
     [ // KeyReleas
       ['code', Type::BYTE],
@@ -37,7 +37,7 @@ class Event {
       ['eventY', Type::INT16],
       ['state', Type::CARD16],
       ['sameScreen', Type::BOOL],
-      ['unused', Type::BYTE]
+      ['unused', Type::BYTE, 1]
     ],
     [ // ButtonPress
       ['code', Type::BYTE],
@@ -136,7 +136,7 @@ class Event {
     ],
     [ // Expose
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['window', Type::WINDOW],
       ['x', Type::CARD16],
@@ -147,7 +147,7 @@ class Event {
     ],
     [ // GraphicsExpose
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['drawable', Type::DRAWABLE],
       ['x', Type::CARD16],
@@ -160,7 +160,7 @@ class Event {
     ],
     [ // NoExposure
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['drawable', Type::DRAWABLE],
       ['minorOpcode', Type::CARD16],
@@ -168,14 +168,14 @@ class Event {
     ],
     [ // VisibilityNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['window', Type::WINDOW],
       ['stat', Type::ENUM8, ['Unobscured', 'PartiallyObscured', 'FullyObscured']]
     ],
     [ // CreateNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['parent', Type::WINDOW],
       ['window', Type::WINDOW],
@@ -188,14 +188,14 @@ class Event {
     ],
     [ // DestroyNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['event', Type::WINDOW],
       ['window', Type::WINDOW]
     ],
     [ // UnmapNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['event', Type::WINDOW],
       ['window', Type::WINDOW],
@@ -203,7 +203,7 @@ class Event {
     ],
     [ // MapNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['event', Type::WINDOW],
       ['window', Type::WINDOW],
@@ -211,14 +211,14 @@ class Event {
     ],
     [ // MapRequest
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['parent', Type::WINDOW],
       ['window', Type::WINDOW]
     ],
     [ // ReparentNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['event', Type::WINDOW],
       ['window', Type::WINDOW],
@@ -229,7 +229,7 @@ class Event {
     ],
     [ // ConfigureNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['event', Type::WINDOW],
       ['window', Type::WINDOW],
@@ -257,7 +257,7 @@ class Event {
     ],
     [ // GravityNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['event', Type::WINDOW],
       ['window', Type::WINDOW],
@@ -266,7 +266,7 @@ class Event {
     ],
     [ // ResizeRequest
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['window', Type::WINDOW],
       ['width', Type::CARD16],
@@ -274,7 +274,7 @@ class Event {
     ],
     [ // CirculateNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['event', Type::WINDOW],
       ['window', Type::WINDOW],
@@ -283,7 +283,7 @@ class Event {
     ],
     [ // CirculateRequest
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['parent', Type::WINDOW],
       ['window', Type::WINDOW],
@@ -292,7 +292,7 @@ class Event {
     ],
     [ // PropertyNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['window', Type::WINDOW],
       ['atom', Type::ATOM],
@@ -301,7 +301,7 @@ class Event {
     ],
     [ // SelectionClear
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['time', Type::CARD32],
       ['window', Type::WINDOW],
@@ -309,7 +309,7 @@ class Event {
     ],
     [ // SelectionRequest
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['time', Type::CARD32],
       ['owner', Type::WINDOW],
@@ -320,7 +320,7 @@ class Event {
     ],
     [ // SelectionNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['time', Type::CARD32],
       ['requestor', Type::WINDOW],
@@ -330,7 +330,7 @@ class Event {
     ],
     [ // ColormapNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['window', Type::WINDOW],
       ['colormap', Type::COLORMAP],
@@ -339,7 +339,7 @@ class Event {
     ],
     [ // ClientMessage
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['window', Type::WINDOW],
       ['type', Type::ATOM],
@@ -347,7 +347,7 @@ class Event {
     ],
     [ // MappingNotify
       ['code', Type::BYTE],
-      ['unused', 1],
+      ['unused', Type::BYTE, 1],
       ['sequenceNumber', Type::CARD16],
       ['state', Type::ENUM8, ['Modifier', 'Keyboard', 'Pointer']],
       ['count', Type::CARD8]

@@ -156,6 +156,7 @@ class ArrayToBytes {
         } else {
           $p = 0;
         }
+        $this->lengths_n[$name] = $n;
         $this->lengths[$name] = $n + $p;
         $this->lengths_4[$name] = (($n + $p) >> 2);
         $requestLength += $n + $p;

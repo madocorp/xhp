@@ -7,6 +7,15 @@ class Connection {
   protected static $socket;
   protected static $id = 0;
   protected static $lastResponse = false;
+  protected static $authProtocolName;
+  protected static $authProtocolData;
+  protected static $authFamilies = [
+    252 => 'LocalHost',
+    253 => 'Krb5Principal',
+    254 => 'Netname',
+    256 => 'Local',
+    65535 => 'Wild'
+  ];
   public static $data;
 
   public static function init() {
@@ -18,9 +27,43 @@ class Connection {
     $path = "/tmp/.X11-unix/X{$displayNumber}";
     self::$socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
     socket_connect(self::$socket, $path);
-    new ConnectionInitRequest(self::machineByteOrder());
+    self::auth();
+    new ConnectionInitRequest(self::machineByteOrder(), self::$authProtocolName, self::$authProtocolData);
     self::$data = self::$lastResponse;
     self::$lastResponse = false;
+  }
+
+  protected static function auth() {
+    $xauthPath = getenv('XAUTHORITY');
+    if ($xauthPath === false) {
+      $xauthPath = getenv('HOME') . '/.Xauthority';
+    }
+    $packedXauth = file_get_contents($xauthPath);
+    $p = 0;
+    $n = strlen($packedXauth);
+    $xauth = [];
+    while ($p <= $n - 1) {
+      $xauth[] = self::readXauthStruct($packedXauth, $p);
+    }
+var_dump($xauth); exit;
+    self::$authProtocolName = $xauth[0]['name'];
+    self::$authProtocolData = $xauth[0]['data'];
+  }
+
+  protected static function readXauthStruct($xauth, &$p) {
+    $res = [];
+    $unp = unpack('n', $xauth, $p);
+    $res['family'] = self::$authFamilies[reset($unp)] ?? 'Unknown';
+    $p += 2;
+    foreach (['address', 'number', 'name', 'data'] as $field) {
+      $len = unpack('n', $xauth, $p);
+      $len = reset($len);
+      $p += 2;
+      $unp = unpack("a{$len}", $xauth, $p);
+      $res[$field] = reset($unp);
+      $p += $len;
+    }
+    return $res;
   }
 
   public static function close() {
