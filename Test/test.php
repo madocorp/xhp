@@ -442,6 +442,30 @@ new \X11\NoOperationRequest(16);
 zzz();
 new \X11\BellRequest(50);
 
+zzz();
+// big request
+$img = imagecreatetruecolor(640, 480);
+$bg = imagecolorallocate($img, 255, 255, 0);
+imagefill($img, 0, 0, $bg);
+$fg = imagecolorallocate($img, 255, 0, 0);
+imagefilledellipse($img, 320, 240, 600, 400, $fg);
+$data = [];
+for ($i = 0; $i < 480; $i++) {
+  for ($j = 0; $j < 640; $j++) {
+    $color = imagecolorat($img, $j, $i);
+    $data[] = ($color) & 0xff;
+    $data[] = ($color >> 8) & 0xff;
+    $data[] = ($color >> 16) & 0xff;
+    $data[] = 0;
+  }
+}
+$data = pack('C*', ...$data);
+$pmid4 = Connection::generateId();
+new \X11\CreatePixmapRequest(24, $pmid4, $wid1, 640, 480);
+new \X11\PutImageRequest('ZPixmap', $pmid4, $gcid, 640, 480, 0, 0, 0, 24, $data);
+new \X11\CopyAreaRequest($pmid4, $wid1, $gcid, 0, 0, 0, 0, 640, 480);
+
+
 Event::loop();
 
 
@@ -449,7 +473,6 @@ new \X11\FreeGCRequest($gcid);
 new \X11\FreePixmapRequest($pmid1);
 new \X11\FreeCursorRequest($crid1);
 new \X11\CloseFontRequest($fid1);
-
 new \X11\DestroySubwindowsRequest($wid1);
 
 zzz();

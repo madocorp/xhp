@@ -17,6 +17,7 @@ class Connection {
     65535 => 'Wild'
   ];
   public static $data;
+  public static $bigRequests = false;
 
   public static function init() {
     $displayNumber = (int)getenv('DISPLAY');
@@ -30,6 +31,7 @@ class Connection {
     self::auth();
     new ConnectionInitRequest(self::machineByteOrder(), self::$authProtocolName, self::$authProtocolData);
     self::$data = self::$lastResponse;
+    self::activateBigRequestExtension();
     self::$lastResponse = false;
   }
 
@@ -45,7 +47,6 @@ class Connection {
     while ($p <= $n - 1) {
       $xauth[] = self::readXauthStruct($packedXauth, $p);
     }
-var_dump($xauth); exit;
     self::$authProtocolName = $xauth[0]['name'];
     self::$authProtocolData = $xauth[0]['data'];
   }
@@ -142,6 +143,16 @@ var_dump($xauth); exit;
 
   public static function getLastResponse() {
     return self::$lastResponse;
+  }
+
+  protected static function activateBigRequestExtension() {
+    new \X11\QueryExtensionRequest('BIG-REQUESTS');
+    if (self::$lastResponse['majorOpcode'] > 0) {
+      new \X11\EnableBigRequests(self::$lastResponse['majorOpcode']);
+      self::$bigRequests = self::$lastResponse['maximumRequestLength'];
+    } else {
+      trigger_error("No BIG-REQUEST extension!", E_USER_WARNING);
+    }
   }
 
 }

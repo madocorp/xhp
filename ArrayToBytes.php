@@ -36,6 +36,10 @@ class ArrayToBytes {
     foreach ($this->template as $field) {
       $name = $field[0];
       $type = $field[1];
+      if ($name == 'requestLength' && $this->values[$name] > 65535) {
+        $this->bigRequest();
+        continue;
+      }
       switch ($type) {
         case Type::ENUM8:
         case Type::ENUM16:
@@ -232,6 +236,17 @@ class ArrayToBytes {
         $this->unusedToByte($p);
       }
     }
+  }
+
+  protected function bigRequest() {
+    if (Connection::$bigRequests === false) {
+      throw new \Exception('Request is too big!');
+    }
+    if ($this->values['requestLength'] >= Connection::$bigRequests) {
+      throw new \Exception('Request is too big!');
+    }
+    $extendedLength = $this->values['requestLength'] + 1;
+    $this->bytes .= pack("SL", 0, $extendedLength);
   }
 
   protected function strToByte($name) {
