@@ -480,3 +480,5 @@ new \X11\DestroyWindowRequest($wid1);
 
 zzz();
 new \X11\DestroyWindowRequest($wid2);
+
+\X11\Connection::close();

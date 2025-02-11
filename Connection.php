@@ -27,7 +27,10 @@ class Connection {
   public static function connect($displayNumber) {
     $path = "/tmp/.X11-unix/X{$displayNumber}";
     self::$socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
-    socket_connect(self::$socket, $path);
+    $res = socket_connect(self::$socket, $path);
+    if (!$res) {
+      throw new \Exception("Connection failed.");
+    }
     self::auth();
     new ConnectionInitRequest(self::machineByteOrder(), self::$authProtocolName, self::$authProtocolData);
     self::$data = self::$lastResponse;
@@ -91,7 +94,7 @@ class Connection {
   public static function read($length) {
     $n = 0;
     $z = 0;
-    $response = '';
+    $bytes = '';
     while ($n < $length) {
       $read = socket_read(self::$socket, $length - $n);
       if ($read === false) {
@@ -105,18 +108,18 @@ class Connection {
           throw new \Exception("No more data.");
         }
       } else {
-        $response .= $read;
+        $bytes .= $read;
         $n += $r;
       }
     }
-    return $response;
+    return $bytes;
   }
 
-  public static function write($request) {
-    $length = strlen($request);
+  public static function write($bytes) {
+    $length = strlen($bytes);
     $z = 0;
     while ($length > 0) {
-      $w = socket_write(self::$socket, $request);
+      $w = socket_write(self::$socket, $bytes);
       if ($w === false) {
         throw new \Exception("Failed to send request.");
       }
@@ -127,7 +130,7 @@ class Connection {
           throw new \Exception("Failed to send request in time.");
         }
       } else {
-        $request = substr($request, $w);
+        $bytes = substr($bytes, $w);
         $length -= $w;
       }
     }
