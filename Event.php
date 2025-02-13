@@ -339,7 +339,7 @@ class Event {
     ],
     [ // ClientMessage
       ['code', Type::BYTE],
-      ['unused', Type::BYTE, 1],
+      ['format', Type::CARD8, 1],
       ['sequenceNumber', Type::CARD16],
       ['window', Type::WINDOW],
       ['type', Type::ATOM],
@@ -410,34 +410,41 @@ class Event {
   }
 
   public static function bytesToArray($bytes) {
-    $type = unpack('C', $bytes);
-    $type = $type[1];
-    $sendEvent = (($type & 0x80) > 0);
-    $type = $type & 0x7f;
-    if (!isset(self::$names[$type])) {
+    $eventType = unpack('C', $bytes);
+    $eventType = $eventType[1];
+    $sendEvent = (($eventType & 0x80) > 0);
+    $eventType = $eventType & 0x7f;
+    if (!isset(self::$names[$eventType])) {
       echo "Unknown event.\n";
       return false;
     }
-    $name = self::$names[$type];
-    if ($name == 'Reply') {
+    $eventName = self::$names[$eventType];
+    if ($eventName == 'Reply') {
       throw new \Exception("Unreceived response detected.");
     }
-    if ($name == 'Error') {
+    if ($eventName == 'Error') {
       Error::handle($bytes);
       return;
     }
     $format = [];
-    $definition = self::$definitions[$type];
+    $definition = self::$definitions[$eventType];
     foreach ($definition as $field) {
-      $format[] = Type::$format[$field[1]] . $field[0];
+      $name = $field[0];
+      $type = $field[1];
+      if ($type == Type::VLIST) {
+        $n = $field[3] * Type::$size[$field[2]];
+        $format[] = 'a' . $n . $name;
+      } else {
+        $format[] = Type::$format[$type] . $name;
+      }
     }
     $format = implode('/', $format);
     $event = unpack($format, $bytes);
     unset($event['unused']);
-    $event['name'] = $name;
+    $event['name'] = $eventName;
     $event['SendEvent'] = $sendEvent;
     if (DEBUG) {
-      Debug::event($event, $name);
+      Debug::event($event, $eventName);
     }
     return $event;
   }

@@ -7,11 +7,25 @@ class ChangePropertyRequest extends Request {
   public function __construct($mode, $window, $property, $type, $format, $data) {
     if ($format == 16) {
       $dataLength = strlen($data) >> 1;
+      if (is_array($data)) {
+        $dataLength = count($data);
+        $data = pack("S{$dataLength}", ...$data);
+      }
     } else if ($format == 32) {
-      $dataLength = strlen($data) >> 2;
+      if (is_array($data)) {
+        $dataLength = count($data);
+        $data = pack("L{$dataLength}", ...$data);
+      } else {
+        $dataLength = strlen($data) >> 2;
+      }
     } else {
       $format = 8;
-      $dataLength = strlen($data);
+      if (is_array($data)) {
+        $dataLength = count($data);
+        $data = pack("C{$dataLength}", ...$data);
+      } else {
+        $dataLength = strlen($data);
+      }
     }
     $opcode = 18;
     $values = get_defined_vars();
