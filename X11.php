@@ -8,6 +8,7 @@ require_once 'ArrayToBytes.php';
 require_once 'BytesToArray.php';
 require_once 'Event.php';
 require_once 'Exception.php';
+require_once 'Timeout.php';
 require_once 'Error.php';
 
 if (!defined('X11\DEBUG')) {

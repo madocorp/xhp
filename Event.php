@@ -366,6 +366,7 @@ class Event {
   ];
   protected static $end = false;
   protected static $eventHandler = false;
+  protected static $noMessageHandler = false;
 
   public static function arrayToBytes($name, $fields) {
     $code = array_search($name, self::$names);
@@ -442,7 +443,7 @@ class Event {
     $event = unpack($format, $bytes);
     unset($event['unused']);
     $event['name'] = $eventName;
-    $event['SendEvent'] = $sendEvent;
+    $event['sendEvent'] = $sendEvent;
     if (DEBUG) {
       Debug::event($event, $eventName);
     }
@@ -460,10 +461,21 @@ class Event {
     self::$eventHandler = $eventHandler;
   }
 
+  public static function setNoMessageHandler($noMessageHandler, $sec = 0, $usec = 100000) {
+    self::$noMessageHandler = $noMessageHandler;
+    Connection::setTimeout($sec, $usec);
+  }
+
   public static function loop() {
     while (!self::$end) {
-      $bytes = Connection::read(32);
-      self::handle($bytes);
+      try {
+        $bytes = Connection::read(32);
+        self::handle($bytes);
+      } catch (Timeout $e) {
+        if (self::$noMessageHandler !== false) {
+          call_user_func(self::$noMessageHandler);
+        }
+      }
     }
   }
 

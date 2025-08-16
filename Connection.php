@@ -38,6 +38,10 @@ class Connection {
     self::$lastResponse = false;
   }
 
+  public static function setTimeout($sec, $usec) {
+    socket_set_option(self::$socket, SOL_SOCKET, SO_RCVTIMEO, ['sec' => $sec, 'usec' => $usec]);
+  }
+
   protected static function auth() {
     $xauthPath = getenv('XAUTHORITY');
     if ($xauthPath === false) {
@@ -98,7 +102,7 @@ class Connection {
     while ($n < $length) {
       $read = socket_read(self::$socket, $length - $n);
       if ($read === false) {
-        throw new \Exception("Failed read.");
+        throw new Timeout("TIMEOUT");
       }
       $r = strlen($read);
       if ($r == 0) {
@@ -121,7 +125,7 @@ class Connection {
     while ($length > 0) {
       $w = socket_write(self::$socket, $bytes);
       if ($w === false) {
-        throw new \Exception("Failed to send request.");
+        throw new Timeout("TIMEOUT");
       }
       if ($w == 0) {
         usleep(100);
