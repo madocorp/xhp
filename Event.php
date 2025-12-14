@@ -382,6 +382,13 @@ class Event {
           $formatString .= 'C';
           $values[] = $value;
           $length++;
+        } else if ($field[1] == Type::VLIST) {
+          $formatString .= str_repeat('C', $field[3]);
+          $bytes = unpack('C*', $fields[$field[0]]);
+          foreach ($bytes as $byte) {
+            $values[] = $byte;
+          }
+          $length += $field[3];
         } else if ($field[0] == 'code') {
           $formatString .= 'C';
           $values[] = $code;

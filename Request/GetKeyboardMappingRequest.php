@@ -29,13 +29,14 @@ class GetKeyboardMappingRequest extends Request {
     $n = $response['n'];
     $m = $response['replyLength'] / $n;
     $keysyms = [];
-    for ($i = 0; $i < $n; $i++) {
+    for ($i = 0; $i < $m; $i++) {
       $keycode = [];
-      for ($j = 0; $j < $m; $j++) {
+      for ($j = 0; $j < $n; $j++) {
         $keycode[] = $this->receiveResponse([['keysym', Type::CARD32]], false);
       }
       $keysyms[] = $keycode;
     }
+    $response['keysyms'] = $keysyms;
     return $response;
   }
 

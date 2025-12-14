@@ -24,6 +24,7 @@ $atomWmProtocols = $atomWmProtocols['atom'];
 
 // generate a new id
 $wid = \X11\Connection::generateId();
+// create the window
 $borderWidth = 0;
 $width = 640;
 $height = 480;
